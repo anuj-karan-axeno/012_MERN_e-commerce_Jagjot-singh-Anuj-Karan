@@ -1,7 +1,7 @@
-const express = require('express')
-const dotnev = require('dotenv');
-const { authRoutes } = require('./routes/authRouter');
-dotnev.config({
+import express from 'express'
+import dotenv from 'dotenv';
+import {authRoutes} from './routes/authRouter.js';
+dotenv.config({
     quiet: true
 });
 const app = express();
