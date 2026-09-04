@@ -1,22 +1,33 @@
 import express from 'express'
 import dotenv from 'dotenv';
-import {authRoutes} from './routes/authRouter.js';
+import mongoose from 'mongoose';
+import { authRoutes } from './src/modules/auth/auth.routes.js';
+import { userRoutes } from './src/modules/user/user.routes.js';
+import cookieParser from 'cookie-parser';
 dotenv.config({
     quiet: true
 });
 const app = express();
 
-app.use('/auth', authRoutes)
+app.use(cookieParser())
+app.use(express.json());
 
-app.get('/health',(req,res)=>{
+
+app.use('/v1/auth', authRoutes)
+app.use('/v1/user', userRoutes)
+
+app.get('/v1/health', (req, res) => {
     res.status(200).send({
-        msg:"Server is healthy :)"
+        msg: "Server is healthy :)"
     })
 })
 
 const port = process.env.PORT;
-app.listen(port, () => {
-    console.log(`app listening on port ${port} :)`);
-})
 
 
+mongoose.connect(process.env.MONGO_URL, {
+    dbName: "ShopCo",
+}).then(() => {
+    console.log("MongoDB connected");
+    app.listen(port, () => console.log(`Server running on port ${port}`));
+}).catch((err) => console.log(err));
