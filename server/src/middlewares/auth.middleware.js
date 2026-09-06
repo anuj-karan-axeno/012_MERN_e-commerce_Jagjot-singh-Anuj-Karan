@@ -1,9 +1,10 @@
 import jwt from 'jsonwebtoken'
 import { errorResponse } from '../utility/apiResponse.js'
 
-export const loginMiddleware = (req, res, next) => {
+export const authMiddleware = (req, res, next) => {
     try {
         const token = req.cookies?.accessToken
+        
 
         if (!token) {
             return errorResponse(res, 401, "Not authenticated, please log in")

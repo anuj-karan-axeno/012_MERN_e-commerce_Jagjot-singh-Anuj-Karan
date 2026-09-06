@@ -1,12 +1,14 @@
+import 'dotenv/config';
 import express from 'express'
-import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import { authRoutes } from './src/modules/auth/auth.routes.js';
 import { userRoutes } from './src/modules/user/user.routes.js';
 import cookieParser from 'cookie-parser';
-dotenv.config({
-    quiet: true
-});
+import { productRouter } from './src/modules/products/product.routes.js';
+import { categoriesRouter } from './src/modules/categories/categories.routes.js';
+import { cartRouter } from './src/modules/cart/cart.routes.js';
+import { orderRouter } from './src/modules/order/order.routes.js';
+
 const app = express();
 
 app.use(cookieParser())
@@ -15,6 +17,10 @@ app.use(express.json());
 
 app.use('/v1/auth', authRoutes)
 app.use('/v1/user', userRoutes)
+app.use('/v1/products', productRouter)
+app.use('/v1/category', categoriesRouter)
+app.use('/v1/cart', cartRouter)
+app.use('/v1/order', orderRouter)
 
 app.get('/v1/health', (req, res) => {
     res.status(200).send({

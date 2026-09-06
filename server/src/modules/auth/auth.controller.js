@@ -1,13 +1,13 @@
 import { userModel } from "../../models/user.schema.js"
 import { errorResponse, successResponse } from '../../utility/apiResponse.js'
 import { generateToken } from "../../utility/auth.js"
-import { isValidEmail, isValidPhoneNumber, isValidZip } from "../../utility/validation.js"
+import { isValidEmail, isValidPhoneNumber } from "../../utility/validation.js"
 import bcrypt from 'bcrypt'
 
 
 export const loginUser = async (req, res) => {
     try {
-        const { email, password } = req.body
+        const { email, password } = req.body ?? {}
         const errors = []
 
         if (!email?.trim()) {
@@ -39,17 +39,9 @@ export const loginUser = async (req, res) => {
 
         const token = generateToken({ _id: user._id.toString(), role: user.role });
         res.cookie("accessToken", token, { maxAge: 7 * 24 * 60 * 60 * 1000, sameSite: 'none' })
-        const data = {
 
-            user: {
-                _id: user._id,
-                name: user.name,
-                email: user.email,
-                role: user.role,
-            },
-        }
 
-        return successResponse(res, 200, "Successfully logged in", { ...data })
+        return successResponse(res, 200, "Successfully logged in")
 
     } catch (error) {
         console.log(error)
@@ -61,7 +53,7 @@ export const registerUser = async (req, res) => {
 
 
     try {
-        const { email, password, name, phone, address } = req.body
+        const { email, password, name, phone, address } = req.body ?? {}
         const errors = []
 
         if (!name?.trim()) {
@@ -107,8 +99,6 @@ export const registerUser = async (req, res) => {
 
             if (!zip?.trim()) {
                 errors.push({ field: "address.zip", message: "Zip code is required" })
-            } else if (!isValidZip.test(zip.trim())) {
-                errors.push({ field: "address.zip", message: "Please enter a valid zip code" })
             }
         }
 
@@ -131,11 +121,11 @@ export const registerUser = async (req, res) => {
             name,
             phone: phone.toString().trim(),
             address: {
-                street: address.street.trim(),
-                area: address.area.trim(),
-                state: address.state.trim(),
-                country: address.country.trim(),
-                zip: address.zip.trim()
+                street: address.street,
+                city: address.city,
+                state: address.state,
+                country: address.country,
+                zip: address.zip
             }
         })
 
