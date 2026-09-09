@@ -9,6 +9,7 @@ import { productRouter } from './src/modules/products/product.routes.js';
 import { categoriesRouter } from './src/modules/categories/categories.routes.js';
 import { cartRouter } from './src/modules/cart/cart.routes.js';
 import { orderRouter } from './src/modules/order/order.routes.js';
+import multer from 'multer';
 
 const app = express();
 
@@ -27,13 +28,30 @@ app.use('/api/v1/category', categoriesRouter)
 app.use('/api/v1/cart', cartRouter)
 app.use('/api/v1/order', orderRouter)
 
+// Multer and general error handler
+app.use((err, req, res, next) => {
+    if (err instanceof multer.MulterError) {
+        if (err.code === 'LIMIT_FILE_SIZE') {
+            return res.status(400).json({ success: false, message: 'File size exceeds 5MB limit. Please upload images under 5MB.' });
+        }
+        if (err.code === 'LIMIT_UNEXPECTED_FILE') {
+            return res.status(400).json({ success: false, message: 'You can upload a maximum of 2 gallery images only.' });
+        }
+        return res.status(400).json({ success: false, message: err.message });
+    }
+    if (err) {
+        return res.status(400).json({ success: false, message: err.message || 'An error occurred during file upload.' });
+    }
+    next();
+});
+
 app.get('/v1/health', (req, res) => {
     res.status(200).send({
         msg: "Server is healthy :)"
     })
 })
 
-const port = process.env.PORT;
+const port = process.env.PORT || 8080;
 
 
 mongoose.connect(process.env.MONGO_URL, {

@@ -2,6 +2,7 @@ import { categoryModel } from "../../models/category.schema.js"
 import { productModel } from "../../models/product.schema.js"
 import { errorResponse, successResponse } from "../../utility/apiResponse.js"
 import { uploadToCloudinary } from "../../utility/uploadToCloudinary.js"
+import path from 'path'
 
 export const addProduct = async (req, res) => {
     try {
@@ -34,11 +35,38 @@ export const addProduct = async (req, res) => {
         const thumbnailFile = req.files?.thumbnailImage?.[0]
         const galleryFiles = req.files?.galleryImages || []
 
+        const ALLOWED_MIME_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/heic', 'image/heif'];
+        const ALLOWED_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.webp', '.webpg', '.heic', '.heif'];
+        const MAX_FILE_SIZE = 5 * 1024 * 1024;
+
         if (!thumbnailFile) {
             errors.push({ field: "thumbnailImage", message: "Thumbnail image is required" })
+        } else {
+            if (thumbnailFile.size > MAX_FILE_SIZE) {
+                errors.push({ field: "thumbnailImage", message: "Thumbnail image must be less than 5MB" })
+            }
+            const ext = path.extname(thumbnailFile.originalname || '').toLowerCase()
+            const mime = thumbnailFile.mimetype?.toLowerCase()
+            if (!ALLOWED_MIME_TYPES.includes(mime) && !ALLOWED_EXTENSIONS.includes(ext)) {
+                errors.push({ field: "thumbnailImage", message: "Thumbnail must be a JPG, PNG, WEBP, or HEIC image" })
+            }
         }
+
         if (galleryFiles.length === 0) {
             errors.push({ field: "galleryImages", message: "At least one gallery image is required" })
+        } else if (galleryFiles.length > 2) {
+            errors.push({ field: "galleryImages", message: "You can upload a maximum of 2 gallery images only" })
+        } else {
+            galleryFiles.forEach((file, index) => {
+                if (file.size > MAX_FILE_SIZE) {
+                    errors.push({ field: `galleryImages[${index}]`, message: `Gallery image "${file.originalname}" must be less than 5MB` })
+                }
+                const ext = path.extname(file.originalname || '').toLowerCase()
+                const mime = file.mimetype?.toLowerCase()
+                if (!ALLOWED_MIME_TYPES.includes(mime) && !ALLOWED_EXTENSIONS.includes(ext)) {
+                    errors.push({ field: `galleryImages[${index}]`, message: `Gallery image "${file.originalname}" must be a JPG, PNG, WEBP, or HEIC image` })
+                }
+            })
         }
 
         let parsedVariants = []
@@ -294,7 +322,7 @@ export const fetchAllProducts = async (req, res) => {
         }
 
         // Search query
-        if (search) {
+        if (search && search.trim()) {
             filter.$or = [
                 { name: { $regex: search.trim(), $options: 'i' } },
                 { description: { $regex: search.trim(), $options: 'i' } }

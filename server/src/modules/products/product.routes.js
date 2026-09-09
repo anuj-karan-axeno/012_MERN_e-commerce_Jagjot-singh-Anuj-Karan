@@ -12,7 +12,7 @@ productRouter.get('/:id', fetchProductById)
 
 productRouter.post('/', authMiddleware, roleMiddleware('admin'), upload.fields([
     { name: 'thumbnailImage', maxCount: 1 },
-    { name: 'galleryImages', maxCount: 5 }
+    { name: 'galleryImages', maxCount: 2 }
 ]), addProduct)
 
 productRouter.delete('/', authMiddleware, roleMiddleware('admin'), deleteProduct)
