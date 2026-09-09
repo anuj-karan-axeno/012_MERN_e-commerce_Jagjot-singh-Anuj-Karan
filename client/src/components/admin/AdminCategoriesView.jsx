@@ -17,11 +17,13 @@ export const AdminCategoriesView = ({
         return products.filter(p => p.category?.includes(categoryId)).length;
     };
 
+    const trimmedQuery = searchQuery.trim().toLowerCase();
+
     const filteredCategories = categories.filter(cat => {
-        const query = searchQuery.toLowerCase();
+        if (!trimmedQuery) return true;
         return (
-            cat.name?.toLowerCase().includes(query) ||
-            cat.description?.toLowerCase().includes(query)
+            cat.name?.toLowerCase().includes(trimmedQuery) ||
+            cat.description?.toLowerCase().includes(trimmedQuery)
         );
     });
 
@@ -29,6 +31,8 @@ export const AdminCategoriesView = ({
         await onDeleteCategory(categoryId);
         setDeleteConfirmId(null);
     };
+
+    const isSearching = Boolean(searchQuery.trim());
 
     return (
         <div className="admin-categories-view">
@@ -69,11 +73,11 @@ export const AdminCategoriesView = ({
                     <Tag size={48} className="admin-empty-state__icon" />
                     <h3>No categories found</h3>
                     <p>
-                        {searchQuery
-                            ? `No categories matching "${searchQuery}"`
+                        {isSearching
+                            ? `No categories matching "${searchQuery.trim()}"`
                             : 'No categories created yet. Create a category to organize your products.'}
                     </p>
-                    {!searchQuery && (
+                    {!isSearching && (
                         <button
                             type="button"
                             className="admin-btn admin-btn--primary"

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { AlertCircle } from 'lucide-react';
 import { useAuth } from '../../hooks/AuthContext';
 
 export const ProfileAddress = () => {
@@ -23,6 +24,7 @@ export const ProfileAddress = () => {
     });
     const [saving, setSaving] = useState(false);
     const [statusMessage, setStatusMessage] = useState({ type: '', text: '' });
+    const [fieldErrors, setFieldErrors] = useState({});
 
     const handleStartEdit = () => {
         setFormData({
@@ -33,6 +35,7 @@ export const ProfileAddress = () => {
             zip: savedAddress?.zip || '',
         });
         setStatusMessage({ type: '', text: '' });
+        setFieldErrors({});
         setIsEditing(true);
     };
 
@@ -45,32 +48,53 @@ export const ProfileAddress = () => {
             zip: savedAddress?.zip || '',
         });
         setStatusMessage({ type: '', text: '' });
+        setFieldErrors({});
         setIsEditing(false);
     };
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData((prev) => ({ ...prev, [name]: value }));
+        if (fieldErrors[name]) {
+            setFieldErrors((prev) => ({ ...prev, [name]: '' }));
+        }
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setStatusMessage({ type: '', text: '' });
 
-        const { street, city, state, country, zip } = formData;
-        if (!street.trim() || !city.trim() || !state.trim() || !country.trim() || !zip.trim()) {
-            setStatusMessage({ type: 'error', text: 'All address fields are required.' });
+        const errors = {};
+        if (!formData.street.trim()) {
+            errors.street = 'Street address is required';
+        }
+        if (!formData.city.trim()) {
+            errors.city = 'City is required';
+        }
+        if (!formData.state.trim()) {
+            errors.state = 'State is required';
+        }
+        if (!formData.zip.trim()) {
+            errors.zip = 'PIN code is required';
+        }
+        if (!formData.country.trim()) {
+            errors.country = 'Country is required';
+        }
+
+        if (Object.keys(errors).length > 0) {
+            setFieldErrors(errors);
             return;
         }
+        setFieldErrors({});
 
         try {
             setSaving(true);
             await updateAddress({
-                street: street.trim(),
-                city: city.trim(),
-                state: state.trim(),
-                country: country.trim(),
-                zip: zip.trim(),
+                street: formData.street.trim(),
+                city: formData.city.trim(),
+                state: formData.state.trim(),
+                country: formData.country.trim(),
+                zip: formData.zip.trim(),
             });
             setStatusMessage({ type: 'success', text: 'Address saved' });
             setIsEditing(false);
@@ -124,7 +148,7 @@ export const ProfileAddress = () => {
                     </div>
                 )
             ) : (
-                <form className="profile-edit-form" onSubmit={handleSubmit}>
+                <form className="profile-edit-form" onSubmit={handleSubmit} noValidate>
                     <div className="profile-field">
                         <label htmlFor="addrStreet" className="profile-field__label">
                             Street Address
@@ -133,12 +157,17 @@ export const ProfileAddress = () => {
                             id="addrStreet"
                             name="street"
                             type="text"
-                            className="profile-field__input"
+                            className={`profile-field__input ${fieldErrors.street ? 'profile-field__input--error' : ''}`}
                             value={formData.street}
                             onChange={handleChange}
-                            required
                             placeholder="Street, apartment, suite"
                         />
+                        {fieldErrors.street && (
+                            <span className="profile-field__error">
+                                <AlertCircle size={13} />
+                                {fieldErrors.street}
+                            </span>
+                        )}
                     </div>
 
                     <div className="profile-field-row">
@@ -150,11 +179,16 @@ export const ProfileAddress = () => {
                                 id="addrCity"
                                 name="city"
                                 type="text"
-                                className="profile-field__input"
+                                className={`profile-field__input ${fieldErrors.city ? 'profile-field__input--error' : ''}`}
                                 value={formData.city}
                                 onChange={handleChange}
-                                required
                             />
+                            {fieldErrors.city && (
+                                <span className="profile-field__error">
+                                    <AlertCircle size={13} />
+                                    {fieldErrors.city}
+                                </span>
+                            )}
                         </div>
 
                         <div className="profile-field">
@@ -165,11 +199,16 @@ export const ProfileAddress = () => {
                                 id="addrState"
                                 name="state"
                                 type="text"
-                                className="profile-field__input"
+                                className={`profile-field__input ${fieldErrors.state ? 'profile-field__input--error' : ''}`}
                                 value={formData.state}
                                 onChange={handleChange}
-                                required
                             />
+                            {fieldErrors.state && (
+                                <span className="profile-field__error">
+                                    <AlertCircle size={13} />
+                                    {fieldErrors.state}
+                                </span>
+                            )}
                         </div>
                     </div>
 
@@ -182,11 +221,16 @@ export const ProfileAddress = () => {
                                 id="addrZip"
                                 name="zip"
                                 type="text"
-                                className="profile-field__input"
+                                className={`profile-field__input ${fieldErrors.zip ? 'profile-field__input--error' : ''}`}
                                 value={formData.zip}
                                 onChange={handleChange}
-                                required
                             />
+                            {fieldErrors.zip && (
+                                <span className="profile-field__error">
+                                    <AlertCircle size={13} />
+                                    {fieldErrors.zip}
+                                </span>
+                            )}
                         </div>
 
                         <div className="profile-field">
@@ -197,11 +241,16 @@ export const ProfileAddress = () => {
                                 id="addrCountry"
                                 name="country"
                                 type="text"
-                                className="profile-field__input"
+                                className={`profile-field__input ${fieldErrors.country ? 'profile-field__input--error' : ''}`}
                                 value={formData.country}
                                 onChange={handleChange}
-                                required
                             />
+                            {fieldErrors.country && (
+                                <span className="profile-field__error">
+                                    <AlertCircle size={13} />
+                                    {fieldErrors.country}
+                                </span>
+                            )}
                         </div>
                     </div>
 
@@ -229,4 +278,5 @@ export const ProfileAddress = () => {
 };
 
 export default ProfileAddress;
+
 

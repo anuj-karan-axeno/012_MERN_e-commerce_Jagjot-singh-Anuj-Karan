@@ -38,7 +38,7 @@ export const ProfilePage = () => {
                 <div className="profile-header">
                     <div>
                         <h1 className="profile-header__title">My Account</h1>
-                        <p className="profile-header__email">{user.email}</p>
+
                     </div>
 
                     <button

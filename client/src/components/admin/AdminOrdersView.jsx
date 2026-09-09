@@ -10,15 +10,16 @@ export const AdminOrdersView = ({ orders, loading, onChangeStatus }) => {
 
     const statuses = ['all', 'placed', 'processing', 'shipped', 'delivered', 'cancelled'];
 
+    const trimmedQuery = searchQuery.trim().toLowerCase();
+
     const filteredOrders = orders.filter(order => {
         const matchesStatus = statusFilter === 'all' || order.orderStatus === statusFilter;
-        const query = searchQuery.toLowerCase();
         const matchesQuery =
-            !query ||
-            order._id?.toLowerCase().includes(query) ||
-            order.user?.toLowerCase().includes(query) ||
-            order.shippingAddress?.city?.toLowerCase().includes(query) ||
-            order.items?.some(item => item.name?.toLowerCase().includes(query));
+            !trimmedQuery ||
+            order._id?.toLowerCase().includes(trimmedQuery) ||
+            order.user?.toLowerCase().includes(trimmedQuery) ||
+            order.shippingAddress?.city?.toLowerCase().includes(trimmedQuery) ||
+            order.items?.some(item => item.name?.toLowerCase().includes(trimmedQuery));
 
         return matchesStatus && matchesQuery;
     });
@@ -32,6 +33,8 @@ export const AdminOrdersView = ({ orders, loading, onChangeStatus }) => {
             setUpdatingOrderId(null);
         }
     };
+
+    const isSearching = Boolean(searchQuery.trim());
 
     return (
         <div className="admin-orders-view">
@@ -80,8 +83,8 @@ export const AdminOrdersView = ({ orders, loading, onChangeStatus }) => {
                     <p>
                         {statusFilter !== 'all'
                             ? `No orders currently in "${statusFilter}" status.`
-                            : searchQuery
-                            ? `No orders match "${searchQuery}".`
+                            : isSearching
+                            ? `No orders match "${searchQuery.trim()}".`
                             : 'No customer orders have been placed yet.'}
                     </p>
                 </div>

@@ -242,7 +242,8 @@
     align-items: center;
     font-size: 0.9em;
     padding-bottom: 0.5em;
-    border-bottom: 1px solid #f2f2f2;
+    border-bottom: 1px solid #e8e8e8;
+    font-weight: 600;
 
     &:last-child {
         border-bottom: none;
@@ -251,11 +252,10 @@
 
     &__label {
         color: variables.$medium_grey_color;
-        font-size: 0.85em;
+
     }
 
     &__value {
-        font-weight: 600;
         color: variables.$primary_color;
         text-align: right;
     }
@@ -269,10 +269,11 @@
     flex-direction: column;
     gap: 0.25em;
     font-size: 0.9em;
-    line-height: 1.4;
+
+
+    font-weight: 500;
 
     &__street {
-        font-weight: 600;
         color: variables.$primary_color;
     }
 
@@ -282,7 +283,7 @@
 
     &__country {
         color: variables.$medium_grey_color;
-        font-size: 0.85em;
+
     }
 }
 
@@ -347,6 +348,25 @@
             border-color: variables.$primary_color;
             background: variables.$secondary_color;
         }
+
+        &--error {
+            border-color: variables.$primary_red_color;
+            background: #fff5f5;
+
+            &:focus {
+                border-color: variables.$primary_red_color;
+            }
+        }
+    }
+
+    &__error {
+        font-size: 0.75em;
+        color: variables.$primary_red_color;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        margin-top: 0.1rem;
     }
 }
 
@@ -418,14 +438,33 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 0.75em 1em;
+        padding: 0.85em 1em;
         border-top: 1px solid #f0f0f0;
         font-size: 0.85em;
+        gap: 1.25em;
+        flex-wrap: wrap;
     }
 
     &__dest {
         color: variables.$medium_grey_color;
-        font-size: 0.8em;
+        font-size: 0.9em;
+        font-weight: 600;
+
+        flex: 1;
+        min-width: 200px;
+        display: inline-flex;
+        align-items: flex-start;
+        gap: 0.4rem;
+
+        svg {
+            flex-shrink: 0;
+            margin-top: 0.15rem;
+            color: variables.$medium_grey_color;
+        }
+
+        span {
+            word-break: break-word;
+        }
     }
 
     &__total {
@@ -433,6 +472,8 @@
         align-items: center;
         gap: 0.4em;
         margin-left: auto;
+        white-space: nowrap;
+        flex-shrink: 0;
 
         span {
             color: variables.$medium_grey_color;
@@ -455,24 +496,7 @@
     align-items: center;
     gap: 0.85em;
 
-    &__thumb {
-        width: 44px;
-        height: 44px;
-        border-radius: 6px;
-        background: variables.$product_bg_color;
-        overflow: hidden;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-shrink: 0;
-        color: variables.$medium_grey_color;
 
-        img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-    }
 
     &__details {
         flex: 1;
@@ -490,10 +514,11 @@
     }
 
     &__meta {
-        font-size: 0.78em;
+        font-size: 0.8em;
         color: variables.$medium_grey_color;
         display: flex;
         gap: 0.6em;
+        font-weight: 600;
     }
 
     &__price {

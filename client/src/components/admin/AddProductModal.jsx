@@ -1,5 +1,18 @@
 import { useState } from 'react';
-import { X, Plus, Trash2, UploadCloud, Image as ImageIcon } from 'lucide-react';
+import { X, Plus, Trash2, UploadCloud, Image as ImageIcon, AlertCircle } from 'lucide-react';
+
+const ALLOWED_IMAGE_EXTENSIONS = ['jpg', 'jpeg', 'png', 'webp', 'webpg', 'heic', 'heif'];
+const ALLOWED_IMAGE_MIME_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/heic', 'image/heif'];
+const MAX_IMAGE_SIZE_BYTES = 5 * 1024 * 1024; // 5MB
+
+const isValidImageFile = (file) => {
+    if (!file) return false;
+    const ext = file.name.split('.').pop()?.toLowerCase();
+    const mime = file.type?.toLowerCase();
+    const validExt = ALLOWED_IMAGE_EXTENSIONS.includes(ext);
+    const validMime = mime ? ALLOWED_IMAGE_MIME_TYPES.includes(mime) : false;
+    return validExt || validMime;
+};
 
 export const AddProductModal = ({ isOpen, onClose, onAddProduct, categories }) => {
     const [name, setName] = useState('');
@@ -19,17 +32,30 @@ export const AddProductModal = ({ isOpen, onClose, onAddProduct, categories }) =
     const [galleryPreviews, setGalleryPreviews] = useState([]);
     const [submitting, setSubmitting] = useState(false);
     const [formError, setFormError] = useState('');
+    const [fieldErrors, setFieldErrors] = useState({});
 
     if (!isOpen) return null;
+
+    const handleClose = () => {
+        setFormError('');
+        setFieldErrors({});
+        onClose();
+    };
 
     const handleCategoryToggle = (catId) => {
         setSelectedCategories(prev =>
             prev.includes(catId) ? prev.filter(id => id !== catId) : [...prev, catId]
         );
+        if (fieldErrors.categories) {
+            setFieldErrors(prev => ({ ...prev, categories: '' }));
+        }
     };
 
     const handleAddVariant = () => {
         setVariants(prev => [...prev, { size: '', quantity: 0 }]);
+        if (fieldErrors.variants) {
+            setFieldErrors(prev => ({ ...prev, variants: '' }));
+        }
     };
 
     const handleUpdateVariant = (index, field, value) => {
@@ -38,26 +64,57 @@ export const AddProductModal = ({ isOpen, onClose, onAddProduct, categories }) =
             next[index] = { ...next[index], [field]: field === 'quantity' ? Number(value) : value };
             return next;
         });
+        if (fieldErrors.variants) {
+            setFieldErrors(prev => ({ ...prev, variants: '' }));
+        }
     };
 
     const handleRemoveVariant = (index) => {
         setVariants(prev => prev.filter((_, i) => i !== index));
+        if (fieldErrors.variants) {
+            setFieldErrors(prev => ({ ...prev, variants: '' }));
+        }
     };
 
     const handleThumbnailChange = (e) => {
         const file = e.target.files?.[0];
-        if (file) {
-            setThumbnailFile(file);
-            setThumbnailPreview(URL.createObjectURL(file));
+        if (!file) return;
+
+        if (!isValidImageFile(file)) {
+            setFieldErrors(prev => ({ ...prev, thumbnail: 'Thumbnail must be a JPG, PNG, WEBP, or HEIC image' }));
+            return;
         }
+        if (file.size > MAX_IMAGE_SIZE_BYTES) {
+            setFieldErrors(prev => ({ ...prev, thumbnail: 'Thumbnail image must be less than 5MB' }));
+            return;
+        }
+
+        setFieldErrors(prev => ({ ...prev, thumbnail: '' }));
+        setThumbnailFile(file);
+        setThumbnailPreview(URL.createObjectURL(file));
     };
 
     const handleGalleryChange = (e) => {
         const files = Array.from(e.target.files || []);
-        if (files.length > 5) {
-            setFormError('You can upload a maximum of 5 gallery images');
+        if (files.length === 0) return;
+
+        if (files.length > 2) {
+            setFieldErrors(prev => ({ ...prev, gallery: 'You can upload a maximum of 2 gallery images only' }));
             return;
         }
+
+        for (const f of files) {
+            if (!isValidImageFile(f)) {
+                setFieldErrors(prev => ({ ...prev, gallery: `"${f.name}" is not supported. Please upload JPG, PNG, WEBP, or HEIC images.` }));
+                return;
+            }
+            if (f.size > MAX_IMAGE_SIZE_BYTES) {
+                setFieldErrors(prev => ({ ...prev, gallery: `"${f.name}" exceeds 5MB size limit.` }));
+                return;
+            }
+        }
+
+        setFieldErrors(prev => ({ ...prev, gallery: '' }));
         setGalleryFiles(files);
         setGalleryPreviews(files.map(f => URL.createObjectURL(f)));
     };
@@ -68,6 +125,9 @@ export const AddProductModal = ({ isOpen, onClose, onAddProduct, categories }) =
         const numPrice = Number(price);
         if (numPercent > 0 && numPercent < 100 && numPrice > 0) {
             setDiscountPrice(String(Math.round(numPrice * (1 - numPercent / 100))));
+            if (fieldErrors.discountPrice) {
+                setFieldErrors(prev => ({ ...prev, discountPrice: '' }));
+            }
         } else if (!val) {
             setDiscountPrice('');
         }
@@ -79,6 +139,9 @@ export const AddProductModal = ({ isOpen, onClose, onAddProduct, categories }) =
         const numPrice = Number(price);
         if (numDisc > 0 && numDisc < numPrice && numPrice > 0) {
             setDiscountPercentage(String(Math.round(((numPrice - numDisc) / numPrice) * 100)));
+            if (fieldErrors.discountPrice) {
+                setFieldErrors(prev => ({ ...prev, discountPrice: '' }));
+            }
         } else if (!val) {
             setDiscountPercentage('');
         }
@@ -91,27 +154,86 @@ export const AddProductModal = ({ isOpen, onClose, onAddProduct, categories }) =
         if (numPercent > 0 && numPercent < 100 && numPrice > 0) {
             setDiscountPrice(String(Math.round(numPrice * (1 - numPercent / 100))));
         }
+        if (fieldErrors.price) {
+            setFieldErrors(prev => ({ ...prev, price: '' }));
+        }
+    };
+
+    const validateForm = () => {
+        const errors = {};
+
+        if (!name.trim()) {
+            errors.name = 'Product title is required';
+        }
+
+        if (!String(price).trim()) {
+            errors.price = 'Product price is required';
+        } else if (isNaN(Number(price)) || Number(price) < 0) {
+            errors.price = 'Valid price is required';
+        }
+
+        if (discountPrice && !isNaN(Number(discountPrice)) && Number(discountPrice) >= Number(price)) {
+            errors.discountPrice = 'Discount price must be less than regular price';
+        }
+
+        if (!description.trim()) {
+            errors.description = 'Product description is required';
+        }
+
+        if (selectedCategories.length === 0) {
+            errors.categories = 'Please select at least one category';
+        }
+
+        if (variants.length === 0) {
+            errors.variants = 'At least one variant size/quantity is required';
+        } else {
+            const hasEmptySize = variants.some(v => !v.size || !v.size.trim());
+            const hasInvalidQty = variants.some(v => v.quantity === '' || isNaN(Number(v.quantity)) || Number(v.quantity) < 0);
+            if (hasEmptySize) {
+                errors.variants = 'Every variant must have a size specified';
+            } else if (hasInvalidQty) {
+                errors.variants = 'Variant quantities must be 0 or higher';
+            }
+        }
+
+        if (!thumbnailFile) {
+            errors.thumbnail = 'Main thumbnail image is required';
+        } else if (!isValidImageFile(thumbnailFile)) {
+            errors.thumbnail = 'Thumbnail must be a JPG, PNG, WEBP, or HEIC image';
+        } else if (thumbnailFile.size > MAX_IMAGE_SIZE_BYTES) {
+            errors.thumbnail = 'Thumbnail image must be less than 5MB';
+        }
+
+        if (galleryFiles.length === 0) {
+            errors.gallery = 'At least one gallery image is required';
+        } else if (galleryFiles.length > 2) {
+            errors.gallery = 'You can upload a maximum of 2 gallery images only';
+        } else {
+            for (const f of galleryFiles) {
+                if (!isValidImageFile(f)) {
+                    errors.gallery = `"${f.name}" is not supported. Please upload JPG, PNG, WEBP, or HEIC.`;
+                    break;
+                }
+                if (f.size > MAX_IMAGE_SIZE_BYTES) {
+                    errors.gallery = `"${f.name}" exceeds 5MB size limit.`;
+                    break;
+                }
+            }
+        }
+
+        return errors;
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setFormError('');
 
-        if (!name.trim()) return setFormError('Product title is required');
-        if (!description.trim()) return setFormError('Description is required');
-        if (!price || Number(price) < 0) return setFormError('Valid price is required');
-        if (discountPrice && Number(discountPrice) >= Number(price)) {
-            return setFormError('Discount price must be less than regular price');
+        const errors = validateForm();
+        if (Object.keys(errors).length > 0) {
+            setFieldErrors(errors);
+            return;
         }
-        if (selectedCategories.length === 0) return setFormError('Select at least one category');
-        if (!thumbnailFile) return setFormError('Thumbnail image is required');
-        if (galleryFiles.length === 0) return setFormError('At least one gallery image is required');
-        if (variants.length === 0) return setFormError('At least one variant size/quantity is required');
-
-        for (const v of variants) {
-            if (!v.size?.trim()) return setFormError('Every variant must have a size specified');
-            if (v.quantity < 0) return setFormError('Variant quantities must be 0 or higher');
-        }
+        setFieldErrors({});
 
         try {
             setSubmitting(true);
@@ -141,7 +263,7 @@ export const AddProductModal = ({ isOpen, onClose, onAddProduct, categories }) =
             });
 
             await onAddProduct(formData);
-            onClose();
+            handleClose();
         } catch (err) {
             setFormError(err.message || 'Failed to create product');
         } finally {
@@ -150,28 +272,36 @@ export const AddProductModal = ({ isOpen, onClose, onAddProduct, categories }) =
     };
 
     return (
-        <div className="admin-modal-backdrop" onClick={onClose}>
+        <div className="admin-modal-backdrop" onClick={handleClose}>
             <div className="admin-modal admin-modal--lg" onClick={e => e.stopPropagation()}>
                 <div className="admin-modal__header">
                     <h3>Add New Product</h3>
-                    <button type="button" className="admin-modal__close" onClick={onClose}>
+                    <button type="button" className="admin-modal__close" onClick={handleClose}>
                         <X size={20} />
                     </button>
                 </div>
 
-                <form className="admin-form" onSubmit={handleSubmit}>
+                <form className="admin-form" onSubmit={handleSubmit} noValidate>
                     {formError && <div className="admin-form__alert">{formError}</div>}
 
                     <div className="admin-form__field">
                         <label className="admin-form__label">Product Title *</label>
                         <input
                             type="text"
-                            className="admin-form__input"
+                            className={`admin-form__input ${fieldErrors.name ? 'admin-form__input--error' : ''}`}
                             placeholder="e.g. Slim Fit Denim Shirt"
                             value={name}
-                            onChange={e => setName(e.target.value)}
-                            required
+                            onChange={e => {
+                                setName(e.target.value);
+                                if (fieldErrors.name) setFieldErrors(prev => ({ ...prev, name: '' }));
+                            }}
                         />
+                        {fieldErrors.name && (
+                            <span className="admin-form__field-error">
+                                <AlertCircle size={14} />
+                                {fieldErrors.name}
+                            </span>
+                        )}
                     </div>
 
                     <div className="admin-form__row">
@@ -179,25 +309,36 @@ export const AddProductModal = ({ isOpen, onClose, onAddProduct, categories }) =
                             <label className="admin-form__label">Price (₹) *</label>
                             <input
                                 type="number"
-                                className="admin-form__input"
+                                className={`admin-form__input ${fieldErrors.price ? 'admin-form__input--error' : ''}`}
                                 placeholder="e.g. 499"
                                 value={price}
                                 onChange={e => handlePriceChange(e.target.value)}
                                 min="0"
-                                required
                             />
+                            {fieldErrors.price && (
+                                <span className="admin-form__field-error">
+                                    <AlertCircle size={14} />
+                                    {fieldErrors.price}
+                                </span>
+                            )}
                         </div>
 
                         <div className="admin-form__field">
                             <label className="admin-form__label">Discount Price (₹)</label>
                             <input
                                 type="number"
-                                className="admin-form__input"
+                                className={`admin-form__input ${fieldErrors.discountPrice ? 'admin-form__input--error' : ''}`}
                                 placeholder="e.g. 399 (Optional)"
                                 value={discountPrice}
                                 onChange={e => handleDiscountPriceChange(e.target.value)}
                                 min="0"
                             />
+                            {fieldErrors.discountPrice && (
+                                <span className="admin-form__field-error">
+                                    <AlertCircle size={14} />
+                                    {fieldErrors.discountPrice}
+                                </span>
+                            )}
                         </div>
 
                         <div className="admin-form__field">
@@ -217,13 +358,21 @@ export const AddProductModal = ({ isOpen, onClose, onAddProduct, categories }) =
                     <div className="admin-form__field">
                         <label className="admin-form__label">Description *</label>
                         <textarea
-                            className="admin-form__textarea"
+                            className={`admin-form__textarea ${fieldErrors.description ? 'admin-form__input--error' : ''}`}
                             rows={3}
                             placeholder="Detailed product features, material, and fit details..."
                             value={description}
-                            onChange={e => setDescription(e.target.value)}
-                            required
+                            onChange={e => {
+                                setDescription(e.target.value);
+                                if (fieldErrors.description) setFieldErrors(prev => ({ ...prev, description: '' }));
+                            }}
                         />
+                        {fieldErrors.description && (
+                            <span className="admin-form__field-error">
+                                <AlertCircle size={14} />
+                                {fieldErrors.description}
+                            </span>
+                        )}
                     </div>
 
                     {/* Category Selection */}
@@ -253,6 +402,12 @@ export const AddProductModal = ({ isOpen, onClose, onAddProduct, categories }) =
                                 })}
                             </div>
                         )}
+                        {fieldErrors.categories && (
+                            <span className="admin-form__field-error">
+                                <AlertCircle size={14} />
+                                {fieldErrors.categories}
+                            </span>
+                        )}
                     </div>
 
                     {/* Variants Builder */}
@@ -273,20 +428,24 @@ export const AddProductModal = ({ isOpen, onClose, onAddProduct, categories }) =
                                 <div key={i} className="admin-variant-row">
                                     <input
                                         type="text"
-                                        className="admin-form__input admin-form__input--sm"
+                                        className={`admin-form__input admin-form__input--sm ${
+                                            fieldErrors.variants && !v.size?.trim() ? 'admin-form__input--error' : ''
+                                        }`}
                                         placeholder="Size (e.g. Small, Medium, Large, X-Large)"
                                         value={v.size}
                                         onChange={e => handleUpdateVariant(i, 'size', e.target.value)}
-                                        required
                                     />
                                     <input
                                         type="number"
-                                        className="admin-form__input admin-form__input--sm"
+                                        className={`admin-form__input admin-form__input--sm ${
+                                            fieldErrors.variants && (v.quantity === '' || v.quantity < 0 || isNaN(Number(v.quantity)))
+                                                ? 'admin-form__input--error'
+                                                : ''
+                                        }`}
                                         placeholder="Quantity"
                                         value={v.quantity}
                                         onChange={e => handleUpdateVariant(i, 'quantity', e.target.value)}
                                         min="0"
-                                        required
                                     />
                                     <button
                                         type="button"
@@ -299,13 +458,19 @@ export const AddProductModal = ({ isOpen, onClose, onAddProduct, categories }) =
                                 </div>
                             ))}
                         </div>
+                        {fieldErrors.variants && (
+                            <span className="admin-form__field-error">
+                                <AlertCircle size={14} />
+                                {fieldErrors.variants}
+                            </span>
+                        )}
                     </div>
 
                     {/* Image Uploads */}
                     <div className="admin-form__row">
                         <div className="admin-form__field">
                             <label className="admin-form__label">Main Thumbnail Image *</label>
-                            <div className="admin-file-box">
+                            <div className={`admin-file-box ${fieldErrors.thumbnail ? 'admin-file-box--error' : ''}`}>
                                 {thumbnailPreview ? (
                                     <div className="admin-file-preview">
                                         <img src={thumbnailPreview} alt="Thumbnail preview" />
@@ -313,7 +478,7 @@ export const AddProductModal = ({ isOpen, onClose, onAddProduct, categories }) =
                                             Change
                                             <input
                                                 type="file"
-                                                accept="image/*"
+                                                accept=".jpg,.jpeg,.png,.webp,.webpg,.heic,.heif,image/jpeg,image/png,image/webp,image/heic,image/heif"
                                                 onChange={handleThumbnailChange}
                                                 style={{ display: 'none' }}
                                             />
@@ -323,21 +488,27 @@ export const AddProductModal = ({ isOpen, onClose, onAddProduct, categories }) =
                                     <label className="admin-file-dropzone">
                                         <UploadCloud size={28} />
                                         <span>Click to upload main thumbnail</span>
+                                        <small className="admin-file-hint">JPG, PNG, WEBP, HEIC (Max 5MB)</small>
                                         <input
                                             type="file"
-                                            accept="image/*"
+                                            accept=".jpg,.jpeg,.png,.webp,.webpg,.heic,.heif,image/jpeg,image/png,image/webp,image/heic,image/heif"
                                             onChange={handleThumbnailChange}
-                                            required
                                             style={{ display: 'none' }}
                                         />
                                     </label>
                                 )}
                             </div>
+                            {fieldErrors.thumbnail && (
+                                <span className="admin-form__field-error">
+                                    <AlertCircle size={14} />
+                                    {fieldErrors.thumbnail}
+                                </span>
+                            )}
                         </div>
 
                         <div className="admin-form__field">
-                            <label className="admin-form__label">Gallery Images (1-5 images) *</label>
-                            <div className="admin-file-box">
+                            <label className="admin-form__label">Gallery Images (1-2 images) *</label>
+                            <div className={`admin-file-box ${fieldErrors.gallery ? 'admin-file-box--error' : ''}`}>
                                 {galleryPreviews.length > 0 ? (
                                     <div className="admin-gallery-previews">
                                         {galleryPreviews.map((preview, i) => (
@@ -347,7 +518,7 @@ export const AddProductModal = ({ isOpen, onClose, onAddProduct, categories }) =
                                             Replace
                                             <input
                                                 type="file"
-                                                accept="image/*"
+                                                accept=".jpg,.jpeg,.png,.webp,.webpg,.heic,.heif,image/jpeg,image/png,image/webp,image/heic,image/heif"
                                                 multiple
                                                 onChange={handleGalleryChange}
                                                 style={{ display: 'none' }}
@@ -357,18 +528,24 @@ export const AddProductModal = ({ isOpen, onClose, onAddProduct, categories }) =
                                 ) : (
                                     <label className="admin-file-dropzone">
                                         <ImageIcon size={28} />
-                                        <span>Click to upload up to 5 gallery shots</span>
+                                        <span>Click to upload up to 2 gallery shots</span>
+                                        <small className="admin-file-hint">JPG, PNG, WEBP, HEIC (Max 5MB each)</small>
                                         <input
                                             type="file"
-                                            accept="image/*"
+                                            accept=".jpg,.jpeg,.png,.webp,.webpg,.heic,.heif,image/jpeg,image/png,image/webp,image/heic,image/heif"
                                             multiple
                                             onChange={handleGalleryChange}
-                                            required
                                             style={{ display: 'none' }}
                                         />
                                     </label>
                                 )}
                             </div>
+                            {fieldErrors.gallery && (
+                                <span className="admin-form__field-error">
+                                    <AlertCircle size={14} />
+                                    {fieldErrors.gallery}
+                                </span>
+                            )}
                         </div>
                     </div>
 
@@ -376,7 +553,7 @@ export const AddProductModal = ({ isOpen, onClose, onAddProduct, categories }) =
                         <button
                             type="button"
                             className="admin-btn admin-btn--secondary"
-                            onClick={onClose}
+                            onClick={handleClose}
                             disabled={submitting}
                         >
                             Cancel
@@ -396,3 +573,4 @@ export const AddProductModal = ({ isOpen, onClose, onAddProduct, categories }) =
 };
 
 export default AddProductModal;
+

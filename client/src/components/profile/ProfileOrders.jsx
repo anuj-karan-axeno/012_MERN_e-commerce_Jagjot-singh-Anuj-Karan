@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Package } from 'lucide-react';
+import { Package, MapPin } from 'lucide-react';
 import { useOrders } from '../../hooks/OrderContext';
 
 export const ProfileOrders = () => {
@@ -22,6 +22,19 @@ export const ProfileOrders = () => {
         } catch {
             return dateStr;
         }
+    };
+
+    const formatFullAddress = (addr) => {
+        if (!addr) return '';
+        if (typeof addr === 'string') return addr;
+        const { street, city, state, zip, country } = addr;
+        const parts = [
+            street,
+            city,
+            state && zip ? `${state} - ${zip}` : (state || zip),
+            country,
+        ].filter(Boolean);
+        return parts.join(', ');
     };
 
     const getStatusClass = (status) => {
@@ -66,6 +79,7 @@ export const ProfileOrders = () => {
                     {myOrders.map((order) => {
                         const items = order.items || [];
                         const shortId = order._id ? order._id.slice(-6).toUpperCase() : 'UNKNOWN';
+                        const fullAddress = formatFullAddress(order.shippingAddress);
 
                         return (
                             <div key={order._id} className="profile-order-item-card">
@@ -123,9 +137,12 @@ export const ProfileOrders = () => {
                                 </div>
 
                                 <div className="profile-order-item-card__footer">
-                                    <span className="profile-order-item-card__dest">
-                                        {order.shippingAddress?.city ? `Delivering to ${order.shippingAddress.city}` : ''}
-                                    </span>
+                                    {fullAddress && (
+                                        <span className="profile-order-item-card__dest">
+                                            <MapPin size={14} />
+                                            <span>Delivering to {fullAddress}</span>
+                                        </span>
+                                    )}
                                     <div className="profile-order-item-card__total">
                                         <span>Total:</span>
                                         <strong>₹{(order.totalAmount || 0).toLocaleString()}</strong>

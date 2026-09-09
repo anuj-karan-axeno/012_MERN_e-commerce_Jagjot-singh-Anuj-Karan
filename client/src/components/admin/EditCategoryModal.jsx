@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { X } from 'lucide-react';
+import { X, AlertCircle } from 'lucide-react';
 
 export const EditCategoryModal = ({ isOpen, onClose, category, onUpdateCategory }) => {
     if (!isOpen || !category) return null;
@@ -18,13 +18,16 @@ const EditCategoryForm = ({ category, onClose, onUpdateCategory }) => {
     const [description, setDescription] = useState(category.description || '');
     const [submitting, setSubmitting] = useState(false);
     const [formError, setFormError] = useState('');
+    const [fieldError, setFieldError] = useState('');
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setFormError('');
+        setFieldError('');
 
         if (!name.trim()) {
-            return setFormError('Category name is required');
+            setFieldError('Category name is required');
+            return;
         }
 
         try {
@@ -51,18 +54,27 @@ const EditCategoryForm = ({ category, onClose, onUpdateCategory }) => {
                     </button>
                 </div>
 
-                <form className="admin-form" onSubmit={handleSubmit}>
+                <form className="admin-form" onSubmit={handleSubmit} noValidate>
                     {formError && <div className="admin-form__alert">{formError}</div>}
 
                     <div className="admin-form__field">
                         <label className="admin-form__label">Category Name *</label>
                         <input
                             type="text"
-                            className="admin-form__input"
+                            className={`admin-form__input ${fieldError ? 'admin-form__input--error' : ''}`}
                             value={name}
-                            onChange={e => setName(e.target.value)}
-                            required
+                            onChange={e => {
+                                setName(e.target.value);
+                                if (fieldError) setFieldError('');
+                                if (formError) setFormError('');
+                            }}
                         />
+                        {fieldError && (
+                            <span className="admin-form__field-error">
+                                <AlertCircle size={14} />
+                                {fieldError}
+                            </span>
+                        )}
                     </div>
 
                     <div className="admin-form__field">

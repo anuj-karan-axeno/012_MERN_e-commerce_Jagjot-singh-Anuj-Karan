@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { X, Plus, Trash2 } from 'lucide-react';
+import { X, Plus, Trash2, AlertCircle } from 'lucide-react';
 
 export const EditProductModal = ({ isOpen, onClose, product, onUpdateProduct, categories }) => {
     if (!isOpen || !product) return null;
@@ -35,15 +35,28 @@ const EditProductForm = ({ onClose, product, onUpdateProduct, categories }) => {
     const [status, setStatus] = useState(product.status || 'active');
     const [submitting, setSubmitting] = useState(false);
     const [formError, setFormError] = useState('');
+    const [fieldErrors, setFieldErrors] = useState({});
+
+    const handleClose = () => {
+        setFormError('');
+        setFieldErrors({});
+        onClose();
+    };
 
     const handleCategoryToggle = (catId) => {
         setSelectedCategories(prev =>
             prev.includes(catId) ? prev.filter(id => id !== catId) : [...prev, catId]
         );
+        if (fieldErrors.categories) {
+            setFieldErrors(prev => ({ ...prev, categories: '' }));
+        }
     };
 
     const handleAddVariant = () => {
         setVariants(prev => [...prev, { size: '', quantity: 0 }]);
+        if (fieldErrors.variants) {
+            setFieldErrors(prev => ({ ...prev, variants: '' }));
+        }
     };
 
     const handleUpdateVariant = (index, field, value) => {
@@ -52,10 +65,16 @@ const EditProductForm = ({ onClose, product, onUpdateProduct, categories }) => {
             next[index] = { ...next[index], [field]: field === 'quantity' ? Number(value) : value };
             return next;
         });
+        if (fieldErrors.variants) {
+            setFieldErrors(prev => ({ ...prev, variants: '' }));
+        }
     };
 
     const handleRemoveVariant = (index) => {
         setVariants(prev => prev.filter((_, i) => i !== index));
+        if (fieldErrors.variants) {
+            setFieldErrors(prev => ({ ...prev, variants: '' }));
+        }
     };
 
     const handleDiscountPercentageChange = (val) => {
@@ -64,6 +83,9 @@ const EditProductForm = ({ onClose, product, onUpdateProduct, categories }) => {
         const numPrice = Number(price);
         if (numPercent > 0 && numPercent < 100 && numPrice > 0) {
             setDiscountPrice(String(Math.round(numPrice * (1 - numPercent / 100))));
+            if (fieldErrors.discountPrice) {
+                setFieldErrors(prev => ({ ...prev, discountPrice: '' }));
+            }
         } else if (!val) {
             setDiscountPrice('');
         }
@@ -75,6 +97,9 @@ const EditProductForm = ({ onClose, product, onUpdateProduct, categories }) => {
         const numPrice = Number(price);
         if (numDisc > 0 && numDisc < numPrice && numPrice > 0) {
             setDiscountPercentage(String(Math.round(((numPrice - numDisc) / numPrice) * 100)));
+            if (fieldErrors.discountPrice) {
+                setFieldErrors(prev => ({ ...prev, discountPrice: '' }));
+            }
         } else if (!val) {
             setDiscountPercentage('');
         }
@@ -87,20 +112,61 @@ const EditProductForm = ({ onClose, product, onUpdateProduct, categories }) => {
         if (numPercent > 0 && numPercent < 100 && numPrice > 0) {
             setDiscountPrice(String(Math.round(numPrice * (1 - numPercent / 100))));
         }
+        if (fieldErrors.price) {
+            setFieldErrors(prev => ({ ...prev, price: '' }));
+        }
+    };
+
+    const validateForm = () => {
+        const errors = {};
+
+        if (!name.trim()) {
+            errors.name = 'Product title is required';
+        }
+
+        if (!String(price).trim()) {
+            errors.price = 'Product price is required';
+        } else if (isNaN(Number(price)) || Number(price) < 0) {
+            errors.price = 'Valid price is required';
+        }
+
+        if (discountPrice && !isNaN(Number(discountPrice)) && Number(discountPrice) >= Number(price)) {
+            errors.discountPrice = 'Discount price must be less than regular price';
+        }
+
+        if (!description.trim()) {
+            errors.description = 'Product description is required';
+        }
+
+        if (selectedCategories.length === 0) {
+            errors.categories = 'Please select at least one category';
+        }
+
+        if (variants.length === 0) {
+            errors.variants = 'At least one variant size/quantity is required';
+        } else {
+            const hasEmptySize = variants.some(v => !v.size || !v.size.trim());
+            const hasInvalidQty = variants.some(v => v.quantity === '' || isNaN(Number(v.quantity)) || Number(v.quantity) < 0);
+            if (hasEmptySize) {
+                errors.variants = 'Every variant must have a size specified';
+            } else if (hasInvalidQty) {
+                errors.variants = 'Variant quantities must be 0 or higher';
+            }
+        }
+
+        return errors;
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setFormError('');
 
-        if (!name.trim()) return setFormError('Product title is required');
-        if (!description.trim()) return setFormError('Description is required');
-        if (!price || Number(price) < 0) return setFormError('Valid price is required');
-        if (discountPrice && Number(discountPrice) >= Number(price)) {
-            return setFormError('Discount price must be less than regular price');
+        const errors = validateForm();
+        if (Object.keys(errors).length > 0) {
+            setFieldErrors(errors);
+            return;
         }
-        if (selectedCategories.length === 0) return setFormError('Select at least one category');
-        if (variants.length === 0) return setFormError('At least one variant size/quantity is required');
+        setFieldErrors({});
 
         try {
             setSubmitting(true);
@@ -119,7 +185,7 @@ const EditProductForm = ({ onClose, product, onUpdateProduct, categories }) => {
             };
 
             await onUpdateProduct(product._id, updatedFields);
-            onClose();
+            handleClose();
         } catch (err) {
             setFormError(err.message || 'Failed to update product');
         } finally {
@@ -128,30 +194,38 @@ const EditProductForm = ({ onClose, product, onUpdateProduct, categories }) => {
     };
 
     return (
-        <div className="admin-modal-backdrop" onClick={onClose}>
+        <div className="admin-modal-backdrop" onClick={handleClose}>
             <div className="admin-modal admin-modal--lg" onClick={e => e.stopPropagation()}>
                 <div className="admin-modal__header">
                     <div>
                         <h3>Edit Product</h3>
                         <p className="admin-modal__subtext">Update product attributes, stock, and status</p>
                     </div>
-                    <button type="button" className="admin-modal__close" onClick={onClose}>
+                    <button type="button" className="admin-modal__close" onClick={handleClose}>
                         <X size={20} />
                     </button>
                 </div>
 
-                <form className="admin-form" onSubmit={handleSubmit}>
+                <form className="admin-form" onSubmit={handleSubmit} noValidate>
                     {formError && <div className="admin-form__alert">{formError}</div>}
 
                     <div className="admin-form__field">
                         <label className="admin-form__label">Product Title *</label>
                         <input
                             type="text"
-                            className="admin-form__input"
+                            className={`admin-form__input ${fieldErrors.name ? 'admin-form__input--error' : ''}`}
                             value={name}
-                            onChange={e => setName(e.target.value)}
-                            required
+                            onChange={e => {
+                                setName(e.target.value);
+                                if (fieldErrors.name) setFieldErrors(prev => ({ ...prev, name: '' }));
+                            }}
                         />
+                        {fieldErrors.name && (
+                            <span className="admin-form__field-error">
+                                <AlertCircle size={14} />
+                                {fieldErrors.name}
+                            </span>
+                        )}
                     </div>
 
                     <div className="admin-form__row">
@@ -159,24 +233,35 @@ const EditProductForm = ({ onClose, product, onUpdateProduct, categories }) => {
                             <label className="admin-form__label">Price (₹) *</label>
                             <input
                                 type="number"
-                                className="admin-form__input"
+                                className={`admin-form__input ${fieldErrors.price ? 'admin-form__input--error' : ''}`}
                                 value={price}
                                 onChange={e => handlePriceChange(e.target.value)}
                                 min="0"
-                                required
                             />
+                            {fieldErrors.price && (
+                                <span className="admin-form__field-error">
+                                    <AlertCircle size={14} />
+                                    {fieldErrors.price}
+                                </span>
+                            )}
                         </div>
 
                         <div className="admin-form__field">
                             <label className="admin-form__label">Discount Price (₹)</label>
                             <input
                                 type="number"
-                                className="admin-form__input"
+                                className={`admin-form__input ${fieldErrors.discountPrice ? 'admin-form__input--error' : ''}`}
                                 placeholder="Optional"
                                 value={discountPrice}
                                 onChange={e => handleDiscountPriceChange(e.target.value)}
                                 min="0"
                             />
+                            {fieldErrors.discountPrice && (
+                                <span className="admin-form__field-error">
+                                    <AlertCircle size={14} />
+                                    {fieldErrors.discountPrice}
+                                </span>
+                            )}
                         </div>
 
                         <div className="admin-form__field">
@@ -196,12 +281,20 @@ const EditProductForm = ({ onClose, product, onUpdateProduct, categories }) => {
                     <div className="admin-form__field">
                         <label className="admin-form__label">Description *</label>
                         <textarea
-                            className="admin-form__textarea"
+                            className={`admin-form__textarea ${fieldErrors.description ? 'admin-form__input--error' : ''}`}
                             rows={3}
                             value={description}
-                            onChange={e => setDescription(e.target.value)}
-                            required
+                            onChange={e => {
+                                setDescription(e.target.value);
+                                if (fieldErrors.description) setFieldErrors(prev => ({ ...prev, description: '' }));
+                            }}
                         />
+                        {fieldErrors.description && (
+                            <span className="admin-form__field-error">
+                                <AlertCircle size={14} />
+                                {fieldErrors.description}
+                            </span>
+                        )}
                     </div>
 
                     {/* Status & Categories */}
@@ -240,6 +333,12 @@ const EditProductForm = ({ onClose, product, onUpdateProduct, categories }) => {
                                     );
                                 })}
                             </div>
+                            {fieldErrors.categories && (
+                                <span className="admin-form__field-error">
+                                    <AlertCircle size={14} />
+                                    {fieldErrors.categories}
+                                </span>
+                            )}
                         </div>
                     </div>
 
@@ -261,20 +360,24 @@ const EditProductForm = ({ onClose, product, onUpdateProduct, categories }) => {
                                 <div key={i} className="admin-variant-row">
                                     <input
                                         type="text"
-                                        className="admin-form__input admin-form__input--sm"
+                                        className={`admin-form__input admin-form__input--sm ${
+                                            fieldErrors.variants && !v.size?.trim() ? 'admin-form__input--error' : ''
+                                        }`}
                                         placeholder="Size (e.g. Small, Medium, Large, X-Large)"
                                         value={v.size}
                                         onChange={e => handleUpdateVariant(i, 'size', e.target.value)}
-                                        required
                                     />
                                     <input
                                         type="number"
-                                        className="admin-form__input admin-form__input--sm"
+                                        className={`admin-form__input admin-form__input--sm ${
+                                            fieldErrors.variants && (v.quantity === '' || v.quantity < 0 || isNaN(Number(v.quantity)))
+                                                ? 'admin-form__input--error'
+                                                : ''
+                                        }`}
                                         placeholder="Quantity"
                                         value={v.quantity}
                                         onChange={e => handleUpdateVariant(i, 'quantity', e.target.value)}
                                         min="0"
-                                        required
                                     />
                                     <button
                                         type="button"
@@ -287,13 +390,19 @@ const EditProductForm = ({ onClose, product, onUpdateProduct, categories }) => {
                                 </div>
                             ))}
                         </div>
+                        {fieldErrors.variants && (
+                            <span className="admin-form__field-error">
+                                <AlertCircle size={14} />
+                                {fieldErrors.variants}
+                            </span>
+                        )}
                     </div>
 
                     <div className="admin-modal__footer">
                         <button
                             type="button"
                             className="admin-btn admin-btn--secondary"
-                            onClick={onClose}
+                            onClick={handleClose}
                             disabled={submitting}
                         >
                             Cancel
@@ -313,3 +422,4 @@ const EditProductForm = ({ onClose, product, onUpdateProduct, categories }) => {
 };
 
 export default EditProductModal;
+

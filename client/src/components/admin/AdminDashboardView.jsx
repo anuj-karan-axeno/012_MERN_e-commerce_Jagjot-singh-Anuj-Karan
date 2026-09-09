@@ -70,36 +70,7 @@ export const AdminDashboardView = ({
                 </div>
             </div>
 
-            {/* Quick Actions Bar */}
-            <div className="admin-quick-actions">
-                <span className="admin-quick-actions__title">Quick Management Actions:</span>
-                <div className="admin-quick-actions__buttons">
-                    <button
-                        type="button"
-                        className="admin-btn admin-btn--primary"
-                        onClick={onOpenAddProduct}
-                    >
-                        <Plus size={16} />
-                        <span>Add New Product</span>
-                    </button>
-                    <button
-                        type="button"
-                        className="admin-btn admin-btn--secondary"
-                        onClick={onOpenAddCategory}
-                    >
-                        <Plus size={16} />
-                        <span>Add New Category</span>
-                    </button>
-                    <button
-                        type="button"
-                        className="admin-btn admin-btn--outline"
-                        onClick={() => onNavigateTab('orders')}
-                    >
-                        <span>View All Orders</span>
-                        <ArrowRight size={16} />
-                    </button>
-                </div>
-            </div>
+
 
             {/* Recent Orders Section */}
             <div className="admin-section-card">
@@ -144,10 +115,10 @@ export const AdminDashboardView = ({
                                         <td>
                                             {order.createdAt
                                                 ? new Date(order.createdAt).toLocaleDateString('en-IN', {
-                                                      month: 'short',
-                                                      day: 'numeric',
-                                                      year: 'numeric',
-                                                  })
+                                                    month: 'short',
+                                                    day: 'numeric',
+                                                    year: 'numeric',
+                                                })
                                                 : 'N/A'}
                                         </td>
                                         <td>

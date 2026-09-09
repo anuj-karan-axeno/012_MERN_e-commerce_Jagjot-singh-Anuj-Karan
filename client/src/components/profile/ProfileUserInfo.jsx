@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { AlertCircle } from 'lucide-react';
 import { useAuth } from '../../hooks/AuthContext';
 
 export const ProfileUserInfo = () => {
@@ -9,6 +10,7 @@ export const ProfileUserInfo = () => {
     const [phone, setPhone] = useState(user?.phone || '');
     const [saving, setSaving] = useState(false);
     const [statusMessage, setStatusMessage] = useState({ type: '', text: '' });
+    const [fieldErrors, setFieldErrors] = useState({});
 
     if (!user) return null;
 
@@ -16,6 +18,7 @@ export const ProfileUserInfo = () => {
         setName(user.name || '');
         setPhone(user.phone || '');
         setStatusMessage({ type: '', text: '' });
+        setFieldErrors({});
         setIsEditing(true);
     };
 
@@ -23,6 +26,7 @@ export const ProfileUserInfo = () => {
         setName(user.name || '');
         setPhone(user.phone || '');
         setStatusMessage({ type: '', text: '' });
+        setFieldErrors({});
         setIsEditing(false);
     };
 
@@ -30,17 +34,24 @@ export const ProfileUserInfo = () => {
         e.preventDefault();
         setStatusMessage({ type: '', text: '' });
 
+        const errors = {};
         const trimmedName = name.trim();
-        if (trimmedName.length < 3 || trimmedName.length > 20) {
-            setStatusMessage({ type: 'error', text: 'Name must be between 3 and 20 characters.' });
-            return;
+        if (!trimmedName) {
+            errors.name = 'Name is required';
+        } else if (trimmedName.length < 3 || trimmedName.length > 20) {
+            errors.name = 'Name must be between 3 and 20 characters';
         }
 
         const trimmedPhone = phone.trim();
         if (trimmedPhone && !/^\+?[0-9]{7,15}$/.test(trimmedPhone)) {
-            setStatusMessage({ type: 'error', text: 'Please enter a valid phone number.' });
+            errors.phone = 'Please enter a valid phone number';
+        }
+
+        if (Object.keys(errors).length > 0) {
+            setFieldErrors(errors);
             return;
         }
+        setFieldErrors({});
 
         try {
             setSaving(true);
@@ -95,7 +106,7 @@ export const ProfileUserInfo = () => {
                     </div>
                 </div>
             ) : (
-                <form className="profile-edit-form" onSubmit={handleSubmit}>
+                <form className="profile-edit-form" onSubmit={handleSubmit} noValidate>
                     <div className="profile-field">
                         <label htmlFor="profileName" className="profile-field__label">
                             Name
@@ -103,13 +114,19 @@ export const ProfileUserInfo = () => {
                         <input
                             id="profileName"
                             type="text"
-                            className="profile-field__input"
+                            className={`profile-field__input ${fieldErrors.name ? 'profile-field__input--error' : ''}`}
                             value={name}
-                            onChange={(e) => setName(e.target.value)}
-                            required
-                            minLength={3}
-                            maxLength={20}
+                            onChange={(e) => {
+                                setName(e.target.value);
+                                if (fieldErrors.name) setFieldErrors(prev => ({ ...prev, name: '' }));
+                            }}
                         />
+                        {fieldErrors.name && (
+                            <span className="profile-field__error">
+                                <AlertCircle size={13} />
+                                {fieldErrors.name}
+                            </span>
+                        )}
                     </div>
 
                     <div className="profile-field">
@@ -119,11 +136,20 @@ export const ProfileUserInfo = () => {
                         <input
                             id="profilePhone"
                             type="tel"
-                            className="profile-field__input"
+                            className={`profile-field__input ${fieldErrors.phone ? 'profile-field__input--error' : ''}`}
                             value={phone}
-                            onChange={(e) => setPhone(e.target.value)}
+                            onChange={(e) => {
+                                setPhone(e.target.value);
+                                if (fieldErrors.phone) setFieldErrors(prev => ({ ...prev, phone: '' }));
+                            }}
                             placeholder="Phone number"
                         />
+                        {fieldErrors.phone && (
+                            <span className="profile-field__error">
+                                <AlertCircle size={13} />
+                                {fieldErrors.phone}
+                            </span>
+                        )}
                     </div>
 
                     <div className="profile-edit-form__actions">
@@ -150,4 +176,5 @@ export const ProfileUserInfo = () => {
 };
 
 export default ProfileUserInfo;
+
 

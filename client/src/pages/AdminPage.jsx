@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useAdminProducts } from '../hooks/AdminProductContext';
 import { useCategories } from '../hooks/CategoryContext';
 import { useOrders } from '../hooks/OrderContext';
-import AdminHeader from '../components/admin/AdminHeader';
+import Navbar from '../components/Navbar';
 import AdminTabs from '../components/admin/AdminTabs';
 import AdminDashboardView from '../components/admin/AdminDashboardView';
 import AdminProductsView from '../components/admin/AdminProductsView';
@@ -12,7 +12,7 @@ import AddProductModal from '../components/admin/AddProductModal';
 import EditProductModal from '../components/admin/EditProductModal';
 import AddCategoryModal from '../components/admin/AddCategoryModal';
 import EditCategoryModal from '../components/admin/EditCategoryModal';
-import AdminToast from '../components/admin/AdminToast';
+import { ToastContainer, toast } from 'react-toast';
 
 export const AdminPage = () => {
     const {
@@ -43,7 +43,6 @@ export const AdminPage = () => {
     const [editingProduct, setEditingProduct] = useState(null);
     const [isAddCategoryOpen, setIsAddCategoryOpen] = useState(false);
     const [editingCategory, setEditingCategory] = useState(null);
-    const [toast, setToast] = useState(null);
 
     // Fetch admin orders on mount
     useEffect(() => {
@@ -51,7 +50,11 @@ export const AdminPage = () => {
     }, [fetchAdminOrders]);
 
     const showToast = (type, message) => {
-        setToast({ type, message });
+        if (type === 'error') {
+            toast.error(message);
+        } else {
+            toast.success(message);
+        }
     };
 
     // Product handlers
@@ -132,17 +135,15 @@ export const AdminPage = () => {
 
     return (
         <div className="admin-page">
-            <AdminToast toast={toast} onClose={() => setToast(null)} />
+            <ToastContainer position="top-right" delay={3500} />
 
-            <AdminHeader />
+            <Navbar />
 
             <div className="admin-container">
                 <div className="admin-container__header">
                     <div>
                         <h1 className="admin-container__title">Admin Control Center</h1>
-                        <p className="admin-container__subtitle">
-                            Manage your ShopCo catalog, categories, and customer orders
-                        </p>
+
                     </div>
 
                     <AdminTabs

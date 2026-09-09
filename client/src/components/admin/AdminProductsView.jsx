@@ -17,11 +17,13 @@ export const AdminProductsView = ({
         return acc;
     }, {});
 
+    const trimmedQuery = searchQuery.trim().toLowerCase();
+
     const filteredProducts = products.filter(p => {
-        const query = searchQuery.toLowerCase();
+        if (!trimmedQuery) return true;
         return (
-            p.name?.toLowerCase().includes(query) ||
-            p.description?.toLowerCase().includes(query)
+            p.name?.toLowerCase().includes(trimmedQuery) ||
+            p.description?.toLowerCase().includes(trimmedQuery)
         );
     });
 
@@ -29,6 +31,8 @@ export const AdminProductsView = ({
         await onDeleteProduct(productId);
         setDeleteConfirmId(null);
     };
+
+    const isSearching = Boolean(searchQuery.trim());
 
     return (
         <div className="admin-products-view">
@@ -61,11 +65,11 @@ export const AdminProductsView = ({
                     <Package size={48} className="admin-empty-state__icon" />
                     <h3>No products found</h3>
                     <p>
-                        {searchQuery
-                            ? `No products matching "${searchQuery}"`
+                        {isSearching
+                            ? `No products matching "${searchQuery.trim()}"`
                             : 'Your store has no products yet. Add your first product to get started.'}
                     </p>
-                    {!searchQuery && (
+                    {!isSearching && (
                         <button
                             type="button"
                             className="admin-btn admin-btn--primary"
