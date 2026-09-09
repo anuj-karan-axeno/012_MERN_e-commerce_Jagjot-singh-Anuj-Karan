@@ -4,27 +4,23 @@ const addressSchema = new mongoose.Schema({
     street: {
         type: String,
         trim: true,
-        required: [true, 'Street is required']
+
     },
     city: {
         type: String,
         trim: true,
-        required: [true, 'Area is required']
     },
     state: {
         type: String,
         trim: true,
-        required: [true, 'State is required']
     },
     country: {
         type: String,
         trim: true,
-        required: [true, 'Country is required']
     },
     zip: {
         type: String,
         trim: true,
-        required: [true, 'Zip code is required'],
     }
 }, { _id: false })
 
@@ -57,7 +53,7 @@ const userSchema = mongoose.Schema({
     role: {
         type: String,
         enum: {
-            values: ['user', 'admin', 'moderator'],
+            values: ['user', 'admin'],
             message: '{VALUE} is not a valid role'
         },
         default: 'user'

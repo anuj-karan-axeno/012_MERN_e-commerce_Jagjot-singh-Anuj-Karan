@@ -38,10 +38,15 @@ export const loginUser = async (req, res) => {
         }
 
         const token = generateToken({ _id: user._id.toString(), role: user.role });
-        res.cookie("accessToken", token, { maxAge: 7 * 24 * 60 * 60 * 1000, sameSite: 'none' })
+        res.cookie("accessToken", token, {
+            maxAge: 7 * 24 * 60 * 60 * 1000,
+            sameSite: 'none',
+            secure: true,
+            httpOnly: true
+        });
 
 
-        return successResponse(res, 200, "Successfully logged in")
+        return successResponse(res, 200, "Successfully logged in", user)
 
     } catch (error) {
         console.log(error)
@@ -79,29 +84,6 @@ export const registerUser = async (req, res) => {
             errors.push({ field: "phone", message: "Please enter a valid phone number" })
         }
 
-        if (!address || typeof address !== 'object') {
-            errors.push({ field: "address", message: "Address is required" })
-        } else {
-            const { street, city, state, country, zip } = address
-
-            if (!street?.trim()) {
-                errors.push({ field: "address.street", message: "Street is required" })
-            }
-            if (!city?.trim()) {
-                errors.push({ field: "address.city", message: "City is required" })
-            }
-            if (!state?.trim()) {
-                errors.push({ field: "address.state", message: "State is required" })
-            }
-            if (!country?.trim()) {
-                errors.push({ field: "address.country", message: "Country is required" })
-            }
-
-            if (!zip?.trim()) {
-                errors.push({ field: "address.zip", message: "Zip code is required" })
-            }
-        }
-
         if (errors.length > 0) {
             return errorResponse(res, 401, "Validation failed", errors)
         }
@@ -119,14 +101,8 @@ export const registerUser = async (req, res) => {
             email,
             password: hashedPassword,
             name,
-            phone: phone.toString().trim(),
-            address: {
-                street: address.street,
-                city: address.city,
-                state: address.state,
-                country: address.country,
-                zip: address.zip
-            }
+            phone
+
         })
 
         return successResponse(res, 201, "Account created successfully");
