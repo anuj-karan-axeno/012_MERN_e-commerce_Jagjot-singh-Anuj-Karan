@@ -10,7 +10,8 @@ import {
     Building2,
     ArrowRight,
     Edit2,
-    Check
+    Check,
+    AlertCircle
 } from 'lucide-react';
 import { useAuth } from '../../hooks/AuthContext';
 import { useCart } from '../../hooks/CartContext';
@@ -53,6 +54,7 @@ export const OrderConfirmationModal = ({
     const [paymentMethod, setPaymentMethod] = useState('card');
     const [submitting, setSubmitting] = useState(false);
     const [error, setError] = useState('');
+    const [addressErrors, setAddressErrors] = useState({});
     const [placedOrder, setPlacedOrder] = useState(null);
 
     useEffect(() => {
@@ -66,6 +68,8 @@ export const OrderConfirmationModal = ({
             });
             setIsEditingAddress(!Boolean(user.address.street && user.address.city));
         }
+        setAddressErrors({});
+        setError('');
     }, [user, isOpen]);
 
     if (!isOpen) return null;
@@ -73,6 +77,9 @@ export const OrderConfirmationModal = ({
     const handleAddressChange = (e) => {
         const { name, value } = e.target;
         setShippingAddress((prev) => ({ ...prev, [name]: value }));
+        if (addressErrors[name]) {
+            setAddressErrors((prev) => ({ ...prev, [name]: '' }));
+        }
     };
 
     const handleConfirmOrder = async (e) => {
@@ -80,11 +87,30 @@ export const OrderConfirmationModal = ({
         setError('');
 
         const { street, city, state, country, zip } = shippingAddress;
-        if (!street.trim() || !city.trim() || !state.trim() || !country.trim() || !zip.trim()) {
-            setError('Please provide a complete delivery address.');
+        const errors = {};
+
+        if (!street.trim()) {
+            errors.street = 'Street address is required';
+        }
+        if (!city.trim()) {
+            errors.city = 'City is required';
+        }
+        if (!state.trim()) {
+            errors.state = 'State is required';
+        }
+        if (!zip.trim()) {
+            errors.zip = 'PIN / Zip code is required';
+        }
+        if (!country.trim()) {
+            errors.country = 'Country is required';
+        }
+
+        if (Object.keys(errors).length > 0) {
+            setAddressErrors(errors);
             setIsEditingAddress(true);
             return;
         }
+        setAddressErrors({});
 
         try {
             setSubmitting(true);
@@ -193,7 +219,7 @@ export const OrderConfirmationModal = ({
                     </div>
                 ) : (
 
-                    <form className="checkout-modal__form" onSubmit={handleConfirmOrder}>
+                    <form className="checkout-modal__form" onSubmit={handleConfirmOrder} noValidate>
                         <div className="checkout-modal__header">
                             <h2 className="checkout-modal__title">Confirm Order</h2>
                             <p className="checkout-modal__subtitle">
@@ -238,69 +264,122 @@ export const OrderConfirmationModal = ({
                                 ) : (
                                     <div className="checkout-modal__address-form">
                                         <div className="checkout-modal__field">
+                                            <label htmlFor="chkStreet" className="checkout-modal__label">
+                                                Street Address <span className="checkout-modal__required">*</span>
+                                            </label>
                                             <input
                                                 id="chkStreet"
                                                 name="street"
                                                 type="text"
-                                                required
-                                                placeholder="Street Address, Flat / House No."
+                                                placeholder="Street Address, Flat / House No. *"
                                                 value={shippingAddress.street}
                                                 onChange={handleAddressChange}
-                                                className="checkout-modal__input"
+                                                className={`checkout-modal__input ${addressErrors.street ? 'checkout-modal__input--error' : ''}`}
                                             />
+                                            {addressErrors.street && (
+                                                <span className="checkout-modal__error-text">
+                                                    <AlertCircle size={13} />
+                                                    {addressErrors.street}
+                                                </span>
+                                            )}
                                         </div>
 
                                         <div className="checkout-modal__input-row">
-                                            <input
-                                                id="chkCity"
-                                                name="city"
-                                                type="text"
-                                                required
-                                                placeholder="City"
-                                                value={shippingAddress.city}
-                                                onChange={handleAddressChange}
-                                                className="checkout-modal__input"
-                                            />
-                                            <input
-                                                id="chkState"
-                                                name="state"
-                                                type="text"
-                                                required
-                                                placeholder="State"
-                                                value={shippingAddress.state}
-                                                onChange={handleAddressChange}
-                                                className="checkout-modal__input"
-                                            />
+                                            <div className="checkout-modal__field">
+                                                <label htmlFor="chkCity" className="checkout-modal__label">
+                                                    City <span className="checkout-modal__required">*</span>
+                                                </label>
+                                                <input
+                                                    id="chkCity"
+                                                    name="city"
+                                                    type="text"
+                                                    placeholder="City *"
+                                                    value={shippingAddress.city}
+                                                    onChange={handleAddressChange}
+                                                    className={`checkout-modal__input ${addressErrors.city ? 'checkout-modal__input--error' : ''}`}
+                                                />
+                                                {addressErrors.city && (
+                                                    <span className="checkout-modal__error-text">
+                                                        <AlertCircle size={13} />
+                                                        {addressErrors.city}
+                                                    </span>
+                                                )}
+                                            </div>
+
+                                            <div className="checkout-modal__field">
+                                                <label htmlFor="chkState" className="checkout-modal__label">
+                                                    State <span className="checkout-modal__required">*</span>
+                                                </label>
+                                                <input
+                                                    id="chkState"
+                                                    name="state"
+                                                    type="text"
+                                                    placeholder="State *"
+                                                    value={shippingAddress.state}
+                                                    onChange={handleAddressChange}
+                                                    className={`checkout-modal__input ${addressErrors.state ? 'checkout-modal__input--error' : ''}`}
+                                                />
+                                                {addressErrors.state && (
+                                                    <span className="checkout-modal__error-text">
+                                                        <AlertCircle size={13} />
+                                                        {addressErrors.state}
+                                                    </span>
+                                                )}
+                                            </div>
                                         </div>
 
                                         <div className="checkout-modal__input-row">
-                                            <input
-                                                id="chkZip"
-                                                name="zip"
-                                                type="text"
-                                                required
-                                                placeholder="PIN / Zip Code"
-                                                value={shippingAddress.zip}
-                                                onChange={handleAddressChange}
-                                                className="checkout-modal__input"
-                                            />
-                                            <input
-                                                id="chkCountry"
-                                                name="country"
-                                                type="text"
-                                                required
-                                                placeholder="Country"
-                                                value={shippingAddress.country}
-                                                onChange={handleAddressChange}
-                                                className="checkout-modal__input"
-                                            />
+                                            <div className="checkout-modal__field">
+                                                <label htmlFor="chkZip" className="checkout-modal__label">
+                                                    PIN / Zip Code <span className="checkout-modal__required">*</span>
+                                                </label>
+                                                <input
+                                                    id="chkZip"
+                                                    name="zip"
+                                                    type="text"
+                                                    placeholder="PIN / Zip Code *"
+                                                    value={shippingAddress.zip}
+                                                    onChange={handleAddressChange}
+                                                    className={`checkout-modal__input ${addressErrors.zip ? 'checkout-modal__input--error' : ''}`}
+                                                />
+                                                {addressErrors.zip && (
+                                                    <span className="checkout-modal__error-text">
+                                                        <AlertCircle size={13} />
+                                                        {addressErrors.zip}
+                                                    </span>
+                                                )}
+                                            </div>
+
+                                            <div className="checkout-modal__field">
+                                                <label htmlFor="chkCountry" className="checkout-modal__label">
+                                                    Country <span className="checkout-modal__required">*</span>
+                                                </label>
+                                                <input
+                                                    id="chkCountry"
+                                                    name="country"
+                                                    type="text"
+                                                    placeholder="Country *"
+                                                    value={shippingAddress.country}
+                                                    onChange={handleAddressChange}
+                                                    className={`checkout-modal__input ${addressErrors.country ? 'checkout-modal__input--error' : ''}`}
+                                                />
+                                                {addressErrors.country && (
+                                                    <span className="checkout-modal__error-text">
+                                                        <AlertCircle size={13} />
+                                                        {addressErrors.country}
+                                                    </span>
+                                                )}
+                                            </div>
                                         </div>
 
                                         {hasSavedAddress && (
                                             <button
                                                 type="button"
                                                 className="checkout-modal__cancel-edit"
-                                                onClick={() => setIsEditingAddress(false)}
+                                                onClick={() => {
+                                                    setAddressErrors({});
+                                                    setIsEditingAddress(false);
+                                                }}
                                             >
                                                 Cancel
                                             </button>

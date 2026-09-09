@@ -97,25 +97,13 @@ export const ProfileOrders = () => {
 
                                 <div className="profile-order-item-card__items">
                                     {items.map((item, index) => {
-                                        const productImg =
-                                            item.product?.thumbnailImage ||
-                                            (Array.isArray(item.product?.galleryImages) && item.product.galleryImages[0]);
-
                                         return (
                                             <div
                                                 key={item._id || `${order._id}-item-${index}`}
                                                 className="profile-product-row"
                                             >
-                                                <div className="profile-product-row__thumb">
-                                                    {productImg ? (
-                                                        <img
-                                                            src={productImg}
-                                                            alt={item.name}
-                                                            loading="lazy"
-                                                        />
-                                                    ) : (
-                                                        <Package size={18} strokeWidth={1.5} />
-                                                    )}
+                                                <div className="profile-product-row__icon">
+                                                    <Package size={18} strokeWidth={1.5} />
                                                 </div>
 
                                                 <div className="profile-product-row__details">

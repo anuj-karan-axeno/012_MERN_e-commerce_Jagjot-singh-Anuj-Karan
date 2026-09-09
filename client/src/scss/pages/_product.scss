@@ -35,6 +35,8 @@
 
             @media (max-width:992px) {
                 flex-direction: column-reverse;
+                width: 100%;
+                align-items: center;
             }
         }
 
@@ -46,25 +48,40 @@
 
             @media (max-width:992px) {
                 flex-direction: row;
+                justify-content: center;
+                align-items: center;
                 width: 100%;
-                overflow-x: auto;
+                height: auto;
+                gap: 0.75em;
+            }
+
+            li {
+                @media (max-width:992px) {
+                    flex: 1 1 0;
+                    min-width: 0;
+                    display: flex;
+                    justify-content: center;
+                }
             }
         }
 
         &__thumbnail {
             border-radius: 1.25em;
             overflow: hidden;
-            border: 0;
+            border: 1.5px solid transparent;
             width: 152px;
             height: 152px;
             padding: 0;
-            background: transparent;
+            background: variables.$product_bg_color;
             cursor: pointer;
             flex-shrink: 0;
+            transition: border-color 0.2s ease;
 
             @media (max-width:992px) {
-                width: 5.5em;
-                height: 5.5em;
+                width: 100%;
+                height: auto;
+                aspect-ratio: 1 / 1;
+                flex-shrink: 1;
             }
 
             &-image {
@@ -75,7 +92,7 @@
             }
 
             &--active {
-                border: 1px solid variables.$primary_color;
+                border-color: variables.$primary_color;
             }
         }
 
@@ -85,6 +102,11 @@
             overflow: hidden;
             flex: 1;
             min-height: 20em;
+            background-color: variables.$product_bg_color;
+
+            @media (max-width:992px) {
+                width: 100%;
+            }
 
             @media (max-width:768px) {
                 min-height: 16em;
@@ -125,7 +147,7 @@
         &__section-label,
         &__title {
             font-size: 2em;
-            font-weight: 700;
+            font-weight: 800;
 
             @media (max-width:1200px) {
                 font-size: 1.5em;
@@ -188,39 +210,22 @@
         &__stock-indicator {
             display: inline-flex;
             align-items: center;
-            gap: 0.45em;
-            font-size: 0.85em;
+            font-size: 0.82em;
             font-weight: 600;
-            padding: 0.35em 0.85em;
+            padding: 0.32em 0.85em;
             border-radius: 62px;
             margin-top: 0.6em;
+            width: fit-content;
 
             &--low {
                 color: #c2410c;
                 background-color: #fff7ed;
-                border: 1px solid #ffedd5;
-
-                .product-detail__stock-dot {
-                    background-color: #ea580c;
-                }
             }
 
             &--out {
-                color: #dc2626;
-                background-color: #fef2f2;
-                border: 1px solid #fee2e2;
-
-                .product-detail__stock-dot {
-                    background-color: #dc2626;
-                }
+                color: variables.$primary_red_color;
+                background-color: variables.$secondary_red_color;
             }
-        }
-
-        &__stock-dot {
-            width: 7px;
-            height: 7px;
-            border-radius: 50%;
-            display: inline-block;
         }
 
         &__color-options {

@@ -192,15 +192,13 @@ export const ProductInfo = ({ product, onAddToCart }) => {
 
                 {isLowStock && (
                     <div className="product-detail__stock-indicator product-detail__stock-indicator--low">
-                        <span className="product-detail__stock-dot" />
-                        <span>Hurry up! Only {stock} left</span>
+                        Hurry up! Only {stock} left
                     </div>
                 )}
 
                 {isOutOfStock && (
                     <div className="product-detail__stock-indicator product-detail__stock-indicator--out">
-                        <span className="product-detail__stock-dot" />
-                        <span>Out of stock</span>
+                        Out of stock
                     </div>
                 )}
             </div>

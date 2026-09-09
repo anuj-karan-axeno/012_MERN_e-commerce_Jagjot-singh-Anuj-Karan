@@ -467,6 +467,14 @@
     align-items: center;
     gap: 0.85em;
 
+    &__icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: variables.$primary_color;
+        flex-shrink: 0;
+    }
+
     &__details {
         flex: 1;
         min-width: 0;
