@@ -25,7 +25,6 @@ export const ShopPage = () => {
     const { categoryName } = useParams();
     const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
 
-    // Sync URL search params and category route param into product filter context
     useEffect(() => {
         const catParam = searchParams.get('category') || categoryName || '';
         const styleParam =

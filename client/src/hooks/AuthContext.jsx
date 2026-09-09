@@ -1,4 +1,3 @@
-/* eslint-disable react-refresh/only-export-components */
 import { useState, useEffect, createContext, useContext } from "react";
 import api from "../lib/api";
 
@@ -10,7 +9,6 @@ export const AuthContextProvider = ({ children }) => {
     const [initialLoading, setInitialLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    // Rehydrate user session from cookie on mount
     useEffect(() => {
         const checkAuth = async () => {
             try {
@@ -19,7 +17,6 @@ export const AuthContextProvider = ({ children }) => {
                     setUser(res.data.data);
                 }
             } catch {
-                // Not logged in or session expired
                 setUser(null);
             } finally {
                 setInitialLoading(false);

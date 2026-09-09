@@ -1,4 +1,3 @@
-/* eslint-disable react-refresh/only-export-components */
 import { createContext, useContext, useState, useCallback } from "react";
 import api from "../lib/api";
 
@@ -10,7 +9,6 @@ export const OrderContextProvider = ({ children }) => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
-    // Fetch all orders (Admin only: GET /api/v1/order/admin)
     const fetchAdminOrders = useCallback(async () => {
         try {
             setLoading(true);
@@ -27,7 +25,6 @@ export const OrderContextProvider = ({ children }) => {
         }
     }, []);
 
-    // Fetch customer's own orders (GET /api/v1/order/my-orders)
     const fetchMyOrders = useCallback(async () => {
         try {
             setLoading(true);
@@ -44,7 +41,6 @@ export const OrderContextProvider = ({ children }) => {
         }
     }, []);
 
-    // Change status of an order (Admin only: PATCH /api/v1/order/change-status/:order_id)
     const changeOrderStatus = async (orderId, orderStatus) => {
         try {
             setLoading(true);

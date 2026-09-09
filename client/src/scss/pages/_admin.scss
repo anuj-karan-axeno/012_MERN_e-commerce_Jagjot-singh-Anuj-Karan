@@ -1,10 +1,6 @@
 @use '../abstracts/variables' as variables;
 @use '../abstracts/mixins' as mixins;
 
-/* ==========================================================================
-   Admin Page Layout & Container
-   ========================================================================== */
-
 .admin-page {
     min-height: 100vh;
     background-color: #fafafa;
@@ -14,10 +10,8 @@
 }
 
 .admin-container {
-    max-width: 1280px;
     width: 100%;
-    margin: 0 auto;
-    padding: 2rem 2.5rem;
+    padding: 2rem variables.$container_padding_x_desktop 4rem;
     flex: 1;
 
     &__header {
@@ -39,18 +33,16 @@
         font-size: 0.95rem;
     }
 
-    @media (max-width: 768px) {
-        padding: 1rem;
+    @media (max-width: 992px) {
+        padding: 1.5rem variables.$container_padding_x_mobile 3rem;
+    }
 
+    @media (max-width: 768px) {
         &__title {
             font-size: 1.5rem;
         }
     }
 }
-
-/* ==========================================================================
-   Admin Tab Switcher
-   ========================================================================== */
 
 .admin-tabs {
     display: flex;
@@ -83,7 +75,6 @@
             color: variables.$secondary_color;
             background-color: variables.$primary_color;
 
-
             &:hover {
                 color: variables.$secondary_color;
                 background-color: variables.$primary_color;
@@ -100,10 +91,6 @@
         font-weight: 500;
     }
 }
-
-/* ==========================================================================
-   KPI Cards Grid (Dashboard)
-   ========================================================================== */
 
 .admin-stats-grid {
     display: grid;
@@ -129,7 +116,6 @@
     align-items: flex-start;
     gap: 1rem;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
-
 
     &__info {
         display: flex;
@@ -158,10 +144,6 @@
     }
 }
 
-/* ==========================================================================
-   Quick Actions Bar
-   ========================================================================== */
-
 .admin-quick-actions {
     background-color: variables.$secondary_color;
     border: 1px solid variables.$light_grey_color;
@@ -185,10 +167,6 @@
         flex-wrap: wrap;
     }
 }
-
-/* ==========================================================================
-   Buttons
-   ========================================================================== */
 
 .admin-btn {
     display: inline-flex;
@@ -306,10 +284,6 @@
     }
 }
 
-/* ==========================================================================
-   Toolbar & Search
-   ========================================================================== */
-
 .admin-toolbar {
     display: flex;
     justify-content: space-between;
@@ -410,10 +384,6 @@
         color: #ff8f00;
     }
 }
-
-/* ==========================================================================
-   Table & Cell Components
-   ========================================================================== */
 
 .admin-section-card {
     background-color: variables.$secondary_color;
@@ -602,10 +572,6 @@
     font-size: 0.85rem;
 }
 
-/* ==========================================================================
-   Order Table Cells & Status Changer
-   ========================================================================== */
-
 .admin-order-id-cell {
     display: flex;
     flex-direction: column;
@@ -678,10 +644,6 @@
     }
 }
 
-/* ==========================================================================
-   Status Badges (ShopCo Pill Design)
-   ========================================================================== */
-
 .admin-badge {
     display: inline-flex;
     align-items: center;
@@ -740,10 +702,6 @@
         font-size: 0.72rem;
     }
 }
-
-/* ==========================================================================
-   Modals & Backdrop
-   ========================================================================== */
 
 .admin-modal-backdrop {
     position: fixed;
@@ -818,10 +776,6 @@
         border-top: 1px solid variables.$light_grey_color;
     }
 }
-
-/* ==========================================================================
-   Forms inside Modals
-   ========================================================================== */
 
 .admin-form {
     padding: 1.5rem 1.75rem;
@@ -913,7 +867,6 @@
     }
 }
 
-/* Category Checkbox Pills */
 .admin-checkbox-group {
     display: flex;
     flex-wrap: wrap;
@@ -944,7 +897,6 @@
     }
 }
 
-/* Variant Builder in Modal */
 .admin-variant-builder {
     display: flex;
     flex-direction: column;
@@ -961,7 +913,6 @@
     align-items: center;
 }
 
-/* File Upload Boxes */
 .admin-file-box {
     border: 2px dashed variables.$light_grey_color;
     border-radius: 0.75rem;
@@ -1034,7 +985,6 @@
     cursor: pointer;
 }
 
-/* Order Details Modal Elements */
 .admin-order-detail-content {
     padding: 1.5rem 1.75rem;
     display: flex;
@@ -1136,14 +1086,9 @@
     }
 }
 
-/* react-toast container z-index support */
 .toastContainer {
     z-index: 9999;
 }
-
-/* ==========================================================================
-   Empty States & Fullscreen Guards
-   ========================================================================== */
 
 .admin-empty-state {
     @include mixins.center(column);

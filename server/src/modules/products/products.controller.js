@@ -257,7 +257,6 @@ export const fetchAllProducts = async (req, res) => {
             all = 'false'
         } = req.query;
 
-        // If 'all=true' is passed, return all products (useful for admin or full catalog views)
         if (all === 'true') {
             const allProducts = await productModel
                 .find()
@@ -268,7 +267,6 @@ export const fetchAllProducts = async (req, res) => {
 
         const filter = { status: "active" };
 
-        // Category filter
         if (category) {
             if (category.match(/^[0-9a-fA-F]{24}$/)) {
                 filter.category = category;
@@ -285,7 +283,6 @@ export const fetchAllProducts = async (req, res) => {
             }
         }
 
-        // Dress style filter (matched against category name)
         if (dressStyle) {
             const styleCategory = await categoryModel.findOne({ name: { $regex: dressStyle.trim(), $options: 'i' } });
             if (styleCategory) {
@@ -302,7 +299,6 @@ export const fetchAllProducts = async (req, res) => {
             }
         }
 
-        // Price filter
         if (minPrice !== undefined || maxPrice !== undefined) {
             filter.price = {};
             if (minPrice !== undefined && minPrice !== '' && !isNaN(Number(minPrice))) {
@@ -316,12 +312,10 @@ export const fetchAllProducts = async (req, res) => {
             }
         }
 
-        // Size filter (matches inside variants.size, lowercase)
         if (size) {
             filter['variants.size'] = size.toString().toLowerCase().trim();
         }
 
-        // Search query
         if (search && search.trim()) {
             filter.$or = [
                 { name: { $regex: search.trim(), $options: 'i' } },
@@ -329,7 +323,6 @@ export const fetchAllProducts = async (req, res) => {
             ];
         }
 
-        // Sorting
         let sortCriteria = { createdAt: -1 };
         if (sort === 'price-asc' || sort === 'low-to-high') {
             sortCriteria = { price: 1 };

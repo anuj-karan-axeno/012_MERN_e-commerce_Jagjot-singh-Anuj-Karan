@@ -38,7 +38,6 @@ export const AdminOrdersView = ({ orders, loading, onChangeStatus }) => {
 
     return (
         <div className="admin-orders-view">
-            {/* Filter pills and search */}
             <div className="admin-toolbar admin-toolbar--stacked">
                 <div className="admin-filter-pills">
                     {statuses.map(st => {
@@ -75,7 +74,6 @@ export const AdminOrdersView = ({ orders, loading, onChangeStatus }) => {
                 </div>
             </div>
 
-            {/* Orders Table */}
             {filteredOrders.length === 0 ? (
                 <div className="admin-empty-state">
                     <ShoppingBag size={48} className="admin-empty-state__icon" />
@@ -206,7 +204,6 @@ export const AdminOrdersView = ({ orders, loading, onChangeStatus }) => {
                 </div>
             )}
 
-            {/* Order Details Modal */}
             {selectedOrder && (
                 <div className="admin-modal-backdrop" onClick={() => setSelectedOrder(null)}>
                     <div
@@ -233,7 +230,6 @@ export const AdminOrdersView = ({ orders, loading, onChangeStatus }) => {
                         </div>
 
                         <div className="admin-order-detail-content">
-                            {/* Status Change Section */}
                             <div className="admin-order-detail-card">
                                 <div className="admin-order-detail-card__header">
                                     <h4>Order Status</h4>
@@ -262,7 +258,6 @@ export const AdminOrdersView = ({ orders, loading, onChangeStatus }) => {
                                 </div>
                             </div>
 
-                            {/* Shipping Address */}
                             <div className="admin-order-detail-card">
                                 <h4>
                                     <MapPin size={16} /> Delivery Address
@@ -277,7 +272,6 @@ export const AdminOrdersView = ({ orders, loading, onChangeStatus }) => {
                                 </p>
                             </div>
 
-                            {/* Items List */}
                             <div className="admin-order-detail-card">
                                 <h4>Ordered Items ({selectedOrder.items?.length})</h4>
                                 <div className="admin-order-items-table">
@@ -297,7 +291,6 @@ export const AdminOrdersView = ({ orders, loading, onChangeStatus }) => {
                                 </div>
                             </div>
 
-                            {/* Payment Summary */}
                             <div className="admin-order-summary-row">
                                 <span>Payment Method:</span>
                                 <strong>

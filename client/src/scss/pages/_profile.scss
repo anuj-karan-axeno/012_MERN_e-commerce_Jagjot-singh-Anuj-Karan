@@ -11,11 +11,10 @@
 .profile-container {
     flex: 1;
     width: 100%;
-    max-width: 1120px;
-    margin: 0 auto;
+    padding: 2em variables.$container_padding_x_desktop 4em;
 
     @media (max-width: 992px) {
-        padding: 2em variables.$container_padding_x_tablet 4em;
+        padding: 2em variables.$container_padding_x_mobile 3em;
     }
 
     @media (max-width: 576px) {
@@ -78,9 +77,6 @@
     }
 }
 
-/* ==========================================================================
-   Grid Layout
-   ========================================================================== */
 .profile-grid {
     display: grid;
     grid-template-columns: 360px 1fr;
@@ -105,9 +101,6 @@
     }
 }
 
-/* ==========================================================================
-   Card Common
-   ========================================================================== */
 .profile-card {
     background: variables.$secondary_color;
     border: 1px solid variables.$light_grey_color;
@@ -134,9 +127,6 @@
     }
 }
 
-/* ==========================================================================
-   Action Buttons
-   ========================================================================== */
 .profile-btn-action {
     background: none;
     border: none;
@@ -205,9 +195,6 @@
     }
 }
 
-/* ==========================================================================
-   Alerts / Feedback Messages
-   ========================================================================== */
 .profile-msg {
     padding: 0.6em 0.85em;
     border-radius: 8px;
@@ -227,9 +214,6 @@
     }
 }
 
-/* ==========================================================================
-   Personal Details List
-   ========================================================================== */
 .profile-info-list {
     display: flex;
     flex-direction: column;
@@ -261,15 +245,11 @@
     }
 }
 
-/* ==========================================================================
-   Address Box & Empty State
-   ========================================================================== */
 .profile-address-box {
     display: flex;
     flex-direction: column;
     gap: 0.25em;
     font-size: 0.9em;
-
 
     font-weight: 500;
 
@@ -296,9 +276,6 @@
     padding: 0.5em 0;
 }
 
-/* ==========================================================================
-   Inline Edit Form
-   ========================================================================== */
 .profile-edit-form {
     display: flex;
     flex-direction: column;
@@ -370,9 +347,6 @@
     }
 }
 
-/* ==========================================================================
-   Orders Section
-   ========================================================================== */
 .profile-state-text {
     padding: 2.5em 1em;
     text-align: center;
@@ -488,15 +462,10 @@
     }
 }
 
-/* ==========================================================================
-   Product Row inside Order
-   ========================================================================== */
 .profile-product-row {
     display: flex;
     align-items: center;
     gap: 0.85em;
-
-
 
     &__details {
         flex: 1;
@@ -529,9 +498,6 @@
     }
 }
 
-/* ==========================================================================
-   Status Pills
-   ========================================================================== */
 .profile-status {
     display: inline-flex;
     align-items: center;

@@ -30,7 +30,6 @@ export const ProductInfo = ({ product, onAddToCart }) => {
 
     const activeSize = (selectedSize && sizes.includes(selectedSize)) ? selectedSize : firstAvailableSize;
 
-    // Calculate stock for the currently selected size
     const currentVariant = variants.find(
         v => v.size?.toString().toLowerCase() === activeSize?.toString().toLowerCase()
     );

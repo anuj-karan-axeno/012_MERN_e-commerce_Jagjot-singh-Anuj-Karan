@@ -297,7 +297,6 @@ const EditProductForm = ({ onClose, product, onUpdateProduct, categories }) => {
                         )}
                     </div>
 
-                    {/* Status & Categories */}
                     <div className="admin-form__row">
                         <div className="admin-form__field">
                             <label className="admin-form__label">Product Status</label>
@@ -342,7 +341,6 @@ const EditProductForm = ({ onClose, product, onUpdateProduct, categories }) => {
                         </div>
                     </div>
 
-                    {/* Variants Builder */}
                     <div className="admin-form__field">
                         <div className="admin-form__label-row">
                             <label className="admin-form__label">Sizes & Stock Quantities *</label>

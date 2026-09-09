@@ -34,7 +34,6 @@ export const ProfilePage = () => {
             <Navbar />
 
             <div className="profile-container">
-                {/* Header */}
                 <div className="profile-header">
                     <div>
                         <h1 className="profile-header__title">My Account</h1>
@@ -51,7 +50,6 @@ export const ProfilePage = () => {
                     </button>
                 </div>
 
-                {/* Content Layout */}
                 <div className="profile-grid">
                     <div className="profile-grid__sidebar">
                         <ProfileUserInfo />

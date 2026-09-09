@@ -1,4 +1,3 @@
-/* eslint-disable react-refresh/only-export-components */
 import { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { useAuth } from './AuthContext';
 import api from '../lib/api';
@@ -9,7 +8,6 @@ export const CartContextProvider = ({ children }) => {
     const { user } = useAuth();
     const [cartItems, setCartItems] = useState([]);
 
-    // Fetch server cart on mount or when user changes
     useEffect(() => {
         let isMounted = true;
 
@@ -103,7 +101,6 @@ export const CartContextProvider = ({ children }) => {
             ];
         });
 
-        // Sync with backend if user is logged in
         if (user) {
             try {
                 await api.post('/cart', {

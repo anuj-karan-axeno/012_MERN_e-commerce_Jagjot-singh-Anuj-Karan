@@ -21,7 +21,6 @@ export const AdminDashboardView = ({
 
     return (
         <div className="admin-dashboard">
-            {/* KPI Cards Grid */}
             <div className="admin-stats-grid">
                 <div className="admin-stat-card">
                     <div className="admin-stat-card__icon admin-stat-card__icon--green">
@@ -70,9 +69,6 @@ export const AdminDashboardView = ({
                 </div>
             </div>
 
-
-
-            {/* Recent Orders Section */}
             <div className="admin-section-card">
                 <div className="admin-section-card__header">
                     <div>

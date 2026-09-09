@@ -44,7 +44,6 @@ export const AdminPage = () => {
     const [isAddCategoryOpen, setIsAddCategoryOpen] = useState(false);
     const [editingCategory, setEditingCategory] = useState(null);
 
-    // Fetch admin orders on mount
     useEffect(() => {
         fetchAdminOrders();
     }, [fetchAdminOrders]);
@@ -57,7 +56,6 @@ export const AdminPage = () => {
         }
     };
 
-    // Product handlers
     const handleAddProduct = async (formData) => {
         try {
             await addProduct(formData);
@@ -87,7 +85,6 @@ export const AdminPage = () => {
         }
     };
 
-    // Category handlers
     const handleAddCategory = async (categoryData) => {
         try {
             await addCategory(categoryData);
@@ -117,7 +114,6 @@ export const AdminPage = () => {
         }
     };
 
-    // Order handlers
     const handleChangeOrderStatus = async (orderId, newStatus) => {
         try {
             await changeOrderStatus(orderId, newStatus);
@@ -197,7 +193,6 @@ export const AdminPage = () => {
                 </main>
             </div>
 
-            {/* Modals */}
             <AddProductModal
                 isOpen={isAddProductOpen}
                 onClose={() => setIsAddProductOpen(false)}

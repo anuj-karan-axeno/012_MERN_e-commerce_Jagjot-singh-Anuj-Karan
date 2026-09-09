@@ -12,7 +12,6 @@ export const AdminCategoriesView = ({
     const [searchQuery, setSearchQuery] = useState('');
     const [deleteConfirmId, setDeleteConfirmId] = useState(null);
 
-    // Compute products count for each category
     const getProductCount = (categoryId) => {
         return products.filter(p => p.category?.includes(categoryId)).length;
     };
@@ -36,7 +35,6 @@ export const AdminCategoriesView = ({
 
     return (
         <div className="admin-categories-view">
-            {/* Toolbar */}
             <div className="admin-toolbar">
                 <div className="admin-search">
                     <Search size={18} className="admin-search__icon" />
@@ -59,7 +57,6 @@ export const AdminCategoriesView = ({
                 </button>
             </div>
 
-            {/* Notice about deletion constraints */}
             <div className="admin-info-banner">
                 <AlertCircle size={18} className="admin-info-banner__icon" />
                 <span>
@@ -67,7 +64,6 @@ export const AdminCategoriesView = ({
                 </span>
             </div>
 
-            {/* Categories Table */}
             {filteredCategories.length === 0 ? (
                 <div className="admin-empty-state">
                     <Tag size={48} className="admin-empty-state__icon" />

@@ -3,7 +3,7 @@ import { X, Plus, Trash2, UploadCloud, Image as ImageIcon, AlertCircle } from 'l
 
 const ALLOWED_IMAGE_EXTENSIONS = ['jpg', 'jpeg', 'png', 'webp', 'webpg', 'heic', 'heif'];
 const ALLOWED_IMAGE_MIME_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/heic', 'image/heif'];
-const MAX_IMAGE_SIZE_BYTES = 5 * 1024 * 1024; // 5MB
+const MAX_IMAGE_SIZE_BYTES = 5 * 1024 * 1024; 
 
 const isValidImageFile = (file) => {
     if (!file) return false;
@@ -375,7 +375,6 @@ export const AddProductModal = ({ isOpen, onClose, onAddProduct, categories }) =
                         )}
                     </div>
 
-                    {/* Category Selection */}
                     <div className="admin-form__field">
                         <label className="admin-form__label">Assign Categories *</label>
                         {categories.length === 0 ? (
@@ -410,7 +409,6 @@ export const AddProductModal = ({ isOpen, onClose, onAddProduct, categories }) =
                         )}
                     </div>
 
-                    {/* Variants Builder */}
                     <div className="admin-form__field">
                         <div className="admin-form__label-row">
                             <label className="admin-form__label">Variants (Size & Stock Quantity) *</label>
@@ -466,7 +464,6 @@ export const AddProductModal = ({ isOpen, onClose, onAddProduct, categories }) =
                         )}
                     </div>
 
-                    {/* Image Uploads */}
                     <div className="admin-form__row">
                         <div className="admin-form__field">
                             <label className="admin-form__label">Main Thumbnail Image *</label>

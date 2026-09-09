@@ -44,7 +44,6 @@ export const HomePage = () => {
         };
     }, [products]);
 
-    // Top selling products
     const topSelling = products.slice(0, 4);
 
     const scrollToProducts = () => {

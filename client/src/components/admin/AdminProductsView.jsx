@@ -36,7 +36,6 @@ export const AdminProductsView = ({
 
     return (
         <div className="admin-products-view">
-            {/* Header / Actions bar */}
             <div className="admin-toolbar">
                 <div className="admin-search">
                     <Search size={18} className="admin-search__icon" />
@@ -59,7 +58,6 @@ export const AdminProductsView = ({
                 </button>
             </div>
 
-            {/* Products Table */}
             {filteredProducts.length === 0 ? (
                 <div className="admin-empty-state">
                     <Package size={48} className="admin-empty-state__icon" />

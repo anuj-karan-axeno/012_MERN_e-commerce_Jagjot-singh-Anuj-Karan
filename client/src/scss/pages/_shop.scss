@@ -240,7 +240,6 @@
         cursor: pointer;
         transition: all 0.15s ease;
 
-
         &--active {
             background: variables.$primary_color;
             color: variables.$secondary_color;
@@ -384,9 +383,6 @@
     }
 }
 
-/* ==========================================================================
-   Shop Products Grid
-   ========================================================================== */
 .shop-grid {
     list-style: none;
     display: grid;
@@ -404,7 +400,7 @@
         gap: 1.25em 0.75em;
     }
 
-    /* ProductCard inside grid should take 100% of column width */
+    
     .product-card__item {
         flex: 1 1 auto;
         width: 100%;
@@ -424,9 +420,6 @@
     margin: 1em 0;
 }
 
-/* ==========================================================================
-   Shop Pagination Component
-   ========================================================================== */
 .shop-pagination {
     @include mixins.center($justifyContent: space-between);
     width: 100%;
@@ -508,9 +501,6 @@
     }
 }
 
-/* ==========================================================================
-   Mobile Filter Drawer
-   ========================================================================== */
 .shop-mobile-drawer-backdrop {
     position: fixed;
     inset: 0;
@@ -541,9 +531,6 @@
     }
 }
 
-/* ==========================================================================
-   Empty & Loading States
-   ========================================================================== */
 .shop-loading,
 .shop-empty {
     text-align: center;

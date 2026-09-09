@@ -296,9 +296,7 @@
     }
 }
 
-/* ==========================================================================
-   Checkout Modal (Clean, Spacious, Human-Crafted)
-   ========================================================================== */
+
 .checkout-modal-backdrop {
     position: fixed;
     inset: 0;
@@ -497,7 +495,7 @@
         }
     }
 
-    /* Payment Methods */
+    
     &__payment-methods {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
@@ -541,7 +539,7 @@
         color: variables.$primary_color;
     }
 
-    /* Clean Summary */
+    
     &__summary-card {
         background: variables.$dress_style_bg_color;
         border-radius: 14px;
@@ -576,7 +574,7 @@
         }
     }
 
-    /* Footer */
+    
     &__footer {
         padding: 0 1.75em 1.75em;
     }
@@ -605,7 +603,7 @@
         }
     }
 
-    /* Success State */
+    
     &__success {
         padding: 2.75em 2em;
         display: flex;
