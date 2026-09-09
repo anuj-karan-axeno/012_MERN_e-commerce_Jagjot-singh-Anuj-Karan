@@ -112,6 +112,7 @@ export const AuthContextProvider = ({ children }) => {
                 loading,
                 initialLoading,
                 error,
+                setError,
                 registerUser,
                 loginUser,
                 logoutUser,

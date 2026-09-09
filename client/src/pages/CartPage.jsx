@@ -25,6 +25,7 @@ const CartPage = () => {
     const totalAmount = Math.max(0, cartSubtotal - discountAmount + deliveryFee);
 
     const handleApplyPromo = () => {
+        if (cartItems.length === 0) return;
         const trimmed = promoCode.trim().toUpperCase();
         if (!trimmed) {
             setPromoError('Please enter a promo code');
@@ -206,13 +207,15 @@ const CartPage = () => {
                                     className="order-summary__promo-input"
                                     value={promoCode}
                                     onChange={(e) => setPromoCode(e.target.value)}
+                                    disabled={cartItems.length === 0}
                                     onKeyDown={(e) => {
-                                        if (e.key === 'Enter') handleApplyPromo();
+                                        if (e.key === 'Enter' && cartItems.length > 0) handleApplyPromo();
                                     }}
                                 />
                                 <button
                                     type="button"
                                     className="order-summary__promo-button"
+                                    disabled={cartItems.length === 0}
                                     onClick={handleApplyPromo}
                                 >
                                     Apply

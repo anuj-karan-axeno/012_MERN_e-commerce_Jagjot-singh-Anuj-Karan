@@ -107,6 +107,10 @@
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+
+        @media (max-width: 576px) {
+            font-size: 0.9em;
+        }
     }
 
     &__rating {
@@ -115,6 +119,10 @@
         display: flex;
         align-items: center;
         gap: 0.25em;
+
+        @media (max-width: 576px) {
+            font-size: 0.75em;
+        }
     }
 
     &__star {
@@ -136,6 +144,10 @@
         align-items: center;
         gap: 0.5em;
         flex-wrap: wrap;
+
+        @media (max-width: 576px) {
+            gap: 0.35em;
+        }
     }
 
     &__price {
@@ -144,7 +156,7 @@
         color: variables.$primary_color;
 
         @media (max-width: 576px) {
-            font-size: 1.15em;
+            font-size: 1.05em;
         }
     }
 
@@ -155,7 +167,7 @@
         text-decoration: line-through;
 
         @media (max-width: 576px) {
-            font-size: 1.15em;
+            font-size: 0.95em;
         }
     }
 
@@ -169,8 +181,8 @@
         line-height: 1;
 
         @media (max-width: 576px) {
-            font-size: 0.7em;
-            padding: 0.2em 0.5em;
+            font-size: 0.65em;
+            padding: 0.2em 0.45em;
         }
     }
 }

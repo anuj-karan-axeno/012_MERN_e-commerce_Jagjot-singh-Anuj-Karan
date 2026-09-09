@@ -198,6 +198,13 @@
             border: none;
             border-radius: 3em;
             padding: 0.9em 1.25em;
+            font-family: inherit;
+            font-size: 0.9em;
+
+            &:disabled {
+                opacity: 0.6;
+                cursor: not-allowed;
+            }
         }
 
         &-button {
@@ -206,6 +213,19 @@
             border: none;
             border-radius: 3em;
             padding: 0.9em 1.5em;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: 600;
+            transition: opacity 0.2s ease;
+
+            &:hover:not(:disabled) {
+                opacity: 0.85;
+            }
+
+            &:disabled {
+                opacity: 0.5;
+                cursor: not-allowed;
+            }
         }
 
         &-error {

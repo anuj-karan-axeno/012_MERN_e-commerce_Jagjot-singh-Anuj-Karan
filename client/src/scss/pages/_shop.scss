@@ -307,9 +307,6 @@
     }
 }
 
-/* ==========================================================================
-   Shop Header Component
-   ========================================================================== */
 .shop-header {
     @include mixins.center($justifyContent: space-between);
     gap: 1em;
@@ -317,7 +314,7 @@
 
     &__title {
         font-size: 2em;
-        font-weight: 800;
+        font-weight: 600;
 
         @media (max-width: 768px) {
             font-size: 1.6em;
@@ -342,6 +339,10 @@
     &__sort-group {
         @include mixins.center;
         gap: 0.5em;
+
+        @media (max-width: 768px) {
+            display: none;
+        }
     }
 
     &__sort-label {
@@ -395,11 +396,12 @@
 
     @media (max-width: 1200px) {
         grid-template-columns: repeat(2, 1fr);
+        gap: 1em;
     }
 
-    @media (max-width: 600px) {
-        grid-template-columns: 1fr;
-        justify-items: center;
+    @media (max-width: 576px) {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.25em 0.75em;
     }
 
     /* ProductCard inside grid should take 100% of column width */
