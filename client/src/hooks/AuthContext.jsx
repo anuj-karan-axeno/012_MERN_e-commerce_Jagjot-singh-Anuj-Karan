@@ -97,8 +97,14 @@ export const AuthContextProvider = ({ children }) => {
     };
 
     const logoutUser = async () => {
-        setUser(null);
-        setError(null);
+        try {
+            await api.post('/auth/logout');
+        } catch (err) {
+            console.error(err);
+        } finally {
+            setUser(null);
+            setError(null);
+        }
     };
 
     return (

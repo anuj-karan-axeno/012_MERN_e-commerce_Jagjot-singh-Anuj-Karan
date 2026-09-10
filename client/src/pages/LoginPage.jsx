@@ -1,11 +1,12 @@
 import { useContext, useState } from 'react';
 import { AuthContext } from '../hooks/AuthContext';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { AlertCircle } from 'lucide-react';
 
 const LoginPage = () => {
     const { loginUser, loading, error, setError } = useContext(AuthContext);
     const navigate = useNavigate();
+    const location = useLocation();
 
     const [formData, setFormData] = useState({
         email: '',
@@ -63,7 +64,7 @@ const LoginPage = () => {
             if (loggedInUser?.role === 'admin') {
                 navigate('/admin');
             } else {
-                navigate('/');
+                navigate(location.state?.from || '/');
             }
         } catch (err) {
             if (err.response?.data?.errors?.length > 0) {

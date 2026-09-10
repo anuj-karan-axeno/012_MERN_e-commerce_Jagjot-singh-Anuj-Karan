@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, Navigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import FooterSection from '../components/home/FooterSection';
 import { useCart } from '../hooks/CartContext';
@@ -21,7 +21,7 @@ const AVAILABLE_COUPONS = [
 
 const CartPage = () => {
     const navigate = useNavigate();
-    const { user } = useAuth();
+    const { user, initialLoading } = useAuth();
     const { cartItems, removeFromCart, increaseQuantity, decreaseQuantity, clearCart, cartSubtotal } = useCart();
 
     const [promoCode, setPromoCode] = useState('');
@@ -29,6 +29,18 @@ const CartPage = () => {
     const [discountPercent, setDiscountPercent] = useState(0);
     const [promoError, setPromoError] = useState('');
     const [showCheckoutModal, setShowCheckoutModal] = useState(false);
+
+    if (initialLoading) {
+        return (
+            <div className="cart-loading-screen" style={{ minHeight: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <p>Loading cart...</p>
+            </div>
+        );
+    }
+
+    if (!user) {
+        return <Navigate to="/login" state={{ from: '/cart' }} replace />;
+    }
 
     const deliveryFee = cartSubtotal > 0 ? (cartSubtotal >= 1000 ? 0 : 50) : 0;
     const discountAmount = Math.round(cartSubtotal * (discountPercent / 100));

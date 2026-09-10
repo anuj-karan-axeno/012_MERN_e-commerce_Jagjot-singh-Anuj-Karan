@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { toast } from 'react-toast';
+import { useNavigate } from 'react-router-dom';
 import { useCart } from '../../hooks/CartContext';
+import { useAuth } from '../../hooks/AuthContext';
 
 const COLORS = [
     { name: 'Olive Green', code: '#4F4631' },
@@ -10,6 +12,8 @@ const COLORS = [
 
 export const ProductInfo = ({ product, onAddToCart }) => {
     const { addToCart } = useCart();
+    const { user } = useAuth();
+    const navigate = useNavigate();
 
     const variants = product?.variants || [];
     const rawSizes = variants.length > 0
@@ -77,6 +81,11 @@ export const ProductInfo = ({ product, onAddToCart }) => {
     };
 
     const handleAddToCart = async () => {
+        if (!user) {
+            navigate('/login', { state: { from: `/product/${product?._id}` } });
+            return;
+        }
+
         if (isOutOfStock) {
             toast.error('This product is currently out of stock');
             return;
