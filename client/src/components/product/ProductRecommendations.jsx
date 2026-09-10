@@ -5,7 +5,7 @@ export const ProductRecommendations = ({ currentProductId }) => {
     const { products } = useProducts();
 
     const recommendations = (products || [])
-        .filter((p) => p._id !== currentProductId)
+        .filter((p) => p._id !== currentProductId && (!p.status || p.status === 'active'))
         .slice(0, 4);
 
     if (recommendations.length === 0) {

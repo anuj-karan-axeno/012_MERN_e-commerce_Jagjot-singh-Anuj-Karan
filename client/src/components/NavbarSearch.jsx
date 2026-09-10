@@ -45,7 +45,8 @@ export const NavbarSearch = ({ isMobile = false, onCloseMobile }) => {
             .then((res) => {
                 if (res.data?.success) {
                     const data = res.data.data;
-                    const items = Array.isArray(data) ? data : (data.products || []);
+                    const rawItems = Array.isArray(data) ? data : (data.products || []);
+                    const items = rawItems.filter(p => !p.status || p.status === 'active');
                     const total = data.pagination?.totalProducts ?? items.length;
                     setResults(items);
                     setTotalCount(total);

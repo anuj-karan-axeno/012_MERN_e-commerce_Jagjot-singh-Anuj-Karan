@@ -29,16 +29,22 @@ export const ProductDescription = () => {
                 setError(null);
 
                 const data = await fetchProductById(id);
-                if (isMounted && data) {
-                    setProduct(data);
+                if (isMounted) {
+                    if (!data || data.status === 'inactive') {
+                        setError('Product not found');
+                        setProduct(null);
+                    } else {
+                        setProduct(data);
+                    }
                 }
             } catch (err) {
                 if (isMounted) {
-                    const fallback = products?.find((p) => p._id === id);
+                    const fallback = products?.find((p) => p._id === id && p.status === 'active');
                     if (fallback) {
                         setProduct(fallback);
                     } else {
                         setError(err.message || 'Product not found');
+                        setProduct(null);
                     }
                 }
             } finally {

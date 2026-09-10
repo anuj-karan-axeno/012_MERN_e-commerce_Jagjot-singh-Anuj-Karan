@@ -115,25 +115,27 @@ export const ShopPage = () => {
                             <div className="shop-loading">
                                 <p>Loading products...</p>
                             </div>
-                        ) : products.length === 0 ? (
+                        ) : products.filter((p) => !p.status || p.status === 'active').length === 0 ? (
                             <div className="shop-empty">
                                 <h3>No Products Found</h3>
                                 <p>Try adjusting your search or filters to find what you're looking for.</p>
                             </div>
                         ) : (
                             <ul className="shop-grid">
-                                {products.map((product) => (
-                                    <ProductCard
-                                        key={product._id}
-                                        id={product._id}
-                                        name={product.name}
-                                        price={product.price}
-                                        discountPrice={product.discountPrice}
-                                        discountPercentage={product.discountPercentage}
-                                        imgURL={product.thumbnailImage}
-                                        rating={product.rating || 4.5}
-                                    />
-                                ))}
+                                {products
+                                    .filter((p) => !p.status || p.status === 'active')
+                                    .map((product) => (
+                                        <ProductCard
+                                            key={product._id}
+                                            id={product._id}
+                                            name={product.name}
+                                            price={product.price}
+                                            discountPrice={product.discountPrice}
+                                            discountPercentage={product.discountPercentage}
+                                            imgURL={product.thumbnailImage}
+                                            rating={product.rating || 4.5}
+                                        />
+                                    ))}
                             </ul>
                         )}
 

@@ -7,6 +7,8 @@ export const ProductSection = ({
     onViewAll,
     containerClassName = '',
 }) => {
+    const activeProducts = products.filter(p => !p.status || p.status === 'active');
+
     return (
         <section className="product-section">
             <h2 className="product-section__heading">{title}</h2>
@@ -15,13 +17,13 @@ export const ProductSection = ({
                 <div style={{ textAlign: 'center', padding: '2em', color: '#999' }}>
                     Loading products...
                 </div>
-            ) : products.length === 0 ? (
+            ) : activeProducts.length === 0 ? (
                 <div style={{ textAlign: 'center', padding: '2em', color: '#999' }}>
                     No products currently available in this section.
                 </div>
             ) : (
                 <ul className={`products-container ${containerClassName}`}>
-                    {products.map(product => (
+                    {activeProducts.map(product => (
                         <ProductCard
                             key={product._id}
                             id={product._id}

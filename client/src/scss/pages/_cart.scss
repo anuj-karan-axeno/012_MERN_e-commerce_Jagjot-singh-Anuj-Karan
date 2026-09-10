@@ -187,6 +187,115 @@
         margin-bottom: 1em;
     }
 
+    &__coupons-row {
+        display: flex;
+        align-items: center;
+        gap: 0.6em;
+        margin: 1.25em 0 0.5em;
+        flex-wrap: wrap;
+    }
+
+    &__coupons-label {
+        font-size: 0.78em;
+        font-weight: 600;
+        color: variables.$medium_grey_color;
+    }
+
+    &__coupons-tags {
+        display: flex;
+        align-items: center;
+        gap: 0.4em;
+        flex-wrap: wrap;
+    }
+
+    &__coupon-tag {
+        background: #f7f7f7;
+        border: 1px solid #e5e5e5;
+        border-radius: 2em;
+        padding: 0.3em 0.7em;
+        font-family: inherit;
+        font-size: 0.76em;
+        font-weight: 700;
+        color: variables.$primary_color;
+        cursor: pointer;
+        transition: all 0.15s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35em;
+
+        &-off {
+            font-weight: 500;
+            color: variables.$medium_grey_color;
+            transition: color 0.15s ease;
+        }
+
+        &:hover:not(:disabled) {
+            background: variables.$primary_color;
+            color: variables.$secondary_color;
+            border-color: variables.$primary_color;
+
+            .order-summary__coupon-tag-off {
+                color: rgba(255, 255, 255, 0.75);
+            }
+        }
+
+        &:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+    }
+
+    &__applied-box {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: variables.$light_grey_color;
+        border-radius: 3em;
+        padding: 0.75em 1.25em;
+        margin: 1.25em 0;
+    }
+
+    &__applied-info {
+        display: flex;
+        align-items: center;
+        gap: 0.45em;
+        font-size: 0.9em;
+    }
+
+    &__applied-icon {
+        color: variables.$primary_color;
+        flex-shrink: 0;
+    }
+
+    &__applied-code {
+        font-weight: 700;
+        letter-spacing: 0.03em;
+        color: variables.$primary_color;
+    }
+
+    &__applied-discount {
+        color: variables.$medium_grey_color;
+        font-size: 0.85em;
+        font-weight: 500;
+    }
+
+    &__remove-btn {
+        background: transparent;
+        border: none;
+        color: variables.$medium_grey_color;
+        font-size: 0.82em;
+        font-weight: 600;
+        cursor: pointer;
+        padding: 0.2em 0.4em;
+        font-family: inherit;
+        transition: color 0.15s ease;
+
+        &:hover {
+            color: variables.$primary_red_color;
+            text-decoration: underline;
+        }
+    }
+
     &__promo {
         display: flex;
         gap: 0.75em;

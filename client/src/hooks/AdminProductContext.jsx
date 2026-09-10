@@ -70,17 +70,30 @@ export const AdminProductContextProvider = ({ children }) => {
         try {
             setLoading(true);
             setError(null);
+            const res = await api.patch('/products', { productId, ...updatedFields });
+            if (res.data?.success && res.data?.data) {
+                const updated = res.data.data;
+                setProducts(prev =>
+                    prev.map(prod => (prod._id === productId ? updated : prod))
+                );
+                return updated;
+            }
             setProducts(prev =>
                 prev.map(prod => (prod._id === productId ? { ...prod, ...updatedFields } : prod))
             );
             return { success: true };
         } catch (err) {
-            const message = err.message || "Failed to update product";
+            const message = err.response?.data?.message || err.message || "Failed to update product";
             setError(message);
             throw new Error(message, { cause: err });
         } finally {
             setLoading(false);
         }
+    };
+
+    const toggleProductStatus = async (productId, currentStatus) => {
+        const nextStatus = currentStatus === 'active' ? 'inactive' : 'active';
+        return await updateProduct(productId, { status: nextStatus });
     };
 
     useEffect(() => {
@@ -97,6 +110,7 @@ export const AdminProductContextProvider = ({ children }) => {
                 addProduct,
                 deleteProduct,
                 updateProduct,
+                toggleProductStatus,
             }}
         >
             {children}

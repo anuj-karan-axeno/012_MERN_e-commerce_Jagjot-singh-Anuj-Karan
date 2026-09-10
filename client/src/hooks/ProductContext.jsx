@@ -51,14 +51,16 @@ export const ProductContextProvider = ({ children }) => {
             if (res.data?.success) {
                 const responseData = res.data.data;
                 if (Array.isArray(responseData)) {
-                    setProducts(responseData);
+                    const activeOnly = responseData.filter(p => !p.status || p.status === 'active');
+                    setProducts(activeOnly);
                     setPagination(prev => ({
                         ...prev,
-                        totalProducts: responseData.length,
-                        totalPages: Math.ceil(responseData.length / 9) || 1,
+                        totalProducts: activeOnly.length,
+                        totalPages: Math.ceil(activeOnly.length / 9) || 1,
                     }));
                 } else {
-                    setProducts(responseData.products || []);
+                    const activeOnly = (responseData.products || []).filter(p => !p.status || p.status === 'active');
+                    setProducts(activeOnly);
                     if (responseData.pagination) {
                         setPagination(responseData.pagination);
                     }
@@ -75,9 +77,13 @@ export const ProductContextProvider = ({ children }) => {
     const fetchProductById = useCallback(async (id) => {
         try {
             const res = await api.get(`/products/${id}`);
-            return res.data?.data;
+            const prod = res.data?.data;
+            if (!prod || prod.status === 'inactive') {
+                throw new Error("Product not found");
+            }
+            return prod;
         } catch (err) {
-            const message = err.response?.data?.message || "Failed to fetch product";
+            const message = err.response?.data?.message || err.message || "Failed to fetch product";
             throw new Error(message, { cause: err });
         }
     }, []);

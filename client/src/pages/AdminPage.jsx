@@ -12,7 +12,7 @@ import AddProductModal from '../components/admin/AddProductModal';
 import EditProductModal from '../components/admin/EditProductModal';
 import AddCategoryModal from '../components/admin/AddCategoryModal';
 import EditCategoryModal from '../components/admin/EditCategoryModal';
-import { ToastContainer, toast } from 'react-toast';
+import { toast } from 'react-toast';
 
 export const AdminPage = () => {
     const {
@@ -21,6 +21,7 @@ export const AdminPage = () => {
         addProduct,
         deleteProduct,
         updateProduct,
+        toggleProductStatus,
     } = useAdminProducts();
 
     const {
@@ -85,6 +86,16 @@ export const AdminPage = () => {
         }
     };
 
+    const handleToggleStatus = async (productId, currentStatus) => {
+        const nextStatus = currentStatus === 'active' ? 'inactive' : 'active';
+        try {
+            await toggleProductStatus(productId, currentStatus);
+            showToast('success', `Product status set to ${nextStatus}.`);
+        } catch (err) {
+            showToast('error', err.message || 'Failed to update product status');
+        }
+    };
+
     const handleAddCategory = async (categoryData) => {
         try {
             await addCategory(categoryData);
@@ -131,8 +142,6 @@ export const AdminPage = () => {
 
     return (
         <div className="admin-page">
-            <ToastContainer position="top-right" delay={3500} />
-
             <Navbar />
 
             <div className="admin-container">
@@ -169,6 +178,7 @@ export const AdminPage = () => {
                             onOpenAddProduct={() => setIsAddProductOpen(true)}
                             onOpenEditProduct={product => setEditingProduct(product)}
                             onDeleteProduct={handleDeleteProduct}
+                            onToggleStatus={handleToggleStatus}
                         />
                     )}
 

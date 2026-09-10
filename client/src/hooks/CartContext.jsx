@@ -56,12 +56,22 @@ export const CartContextProvider = ({ children }) => {
     }, [user]);
 
     const addToCart = useCallback(async ({ product, size, color, quantity = 1 }) => {
-        if (!product || !size) return;
+        if (!product || !size) {
+            throw new Error('Product and size are required');
+        }
 
         const productId = product._id || product.id || product.productId;
         const normalizedSize = String(size).trim();
         const normalizedColor = color ? String(color).trim() : '';
         const qty = Math.max(1, Number(quantity) || 1);
+
+        if (user) {
+            await api.post('/cart', {
+                product_id: productId,
+                size: normalizedSize,
+                quantity: qty,
+            });
+        }
 
         setCartItems(prev => {
             const existingIndex = prev.findIndex(
@@ -100,18 +110,6 @@ export const CartContextProvider = ({ children }) => {
                 },
             ];
         });
-
-        if (user) {
-            try {
-                await api.post('/cart', {
-                    product_id: productId,
-                    size: normalizedSize,
-                    quantity: qty,
-                });
-            } catch (err) {
-                console.error('Failed to sync added item with server', err);
-            }
-        }
     }, [user]);
 
     const removeFromCart = useCallback(async (productId, size, color) => {

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { toast } from 'react-toast';
 import { useCart } from '../../hooks/CartContext';
 
 const COLORS = [
@@ -76,7 +77,17 @@ export const ProductInfo = ({ product, onAddToCart }) => {
     };
 
     const handleAddToCart = async () => {
-        if (isOutOfStock || isAdding) return;
+        if (isOutOfStock) {
+            toast.error('This product is currently out of stock');
+            return;
+        }
+
+        if (!activeSize) {
+            toast.error('Please select a size first');
+            return;
+        }
+
+        if (isAdding) return;
 
         try {
             setIsAdding(true);
@@ -103,8 +114,13 @@ export const ProductInfo = ({ product, onAddToCart }) => {
 
             setIsAdded(true);
             setTimeout(() => setIsAdded(false), 2000);
+            toast.success('Added to cart successfully!');
         } catch (error) {
-            console.error('Failed to add to cart:', error);
+            const message =
+                error.response?.data?.message ||
+                error.message ||
+                'Failed to add product to cart';
+            toast.error(message);
         } finally {
             setIsAdding(false);
         }

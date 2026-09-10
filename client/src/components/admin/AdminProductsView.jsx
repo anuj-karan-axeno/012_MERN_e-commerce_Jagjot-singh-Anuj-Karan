@@ -8,6 +8,7 @@ export const AdminProductsView = ({
     onOpenAddProduct,
     onOpenEditProduct,
     onDeleteProduct,
+    onToggleStatus,
 }) => {
     const [searchQuery, setSearchQuery] = useState('');
     const [deleteConfirmId, setDeleteConfirmId] = useState(null);
@@ -155,15 +156,19 @@ export const AdminProductsView = ({
                                             </div>
                                         </td>
                                         <td>
-                                            <span
-                                                className={`admin-badge ${
+                                            <button
+                                                type="button"
+                                                className={`admin-badge admin-badge--clickable ${
                                                     product.status === 'active'
                                                         ? 'admin-badge--active'
                                                         : 'admin-badge--inactive'
                                                 }`}
+                                                onClick={() => onToggleStatus && onToggleStatus(product._id, product.status || 'active')}
+                                                title={`Click to ${product.status === 'active' ? 'deactivate' : 'activate'} this product`}
+                                                style={{ cursor: 'pointer', border: 'none' }}
                                             >
                                                 {product.status || 'active'}
-                                            </span>
+                                            </button>
                                         </td>
                                         <td>
                                             <div className="admin-actions-cell">

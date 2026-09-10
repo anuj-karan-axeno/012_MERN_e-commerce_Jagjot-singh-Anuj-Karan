@@ -5,10 +5,19 @@ import FooterSection from '../components/home/FooterSection';
 import { useCart } from '../hooks/CartContext';
 import { useAuth } from '../hooks/AuthContext';
 import OrderConfirmationModal from '../components/cart/OrderConfirmationModal';
+import { Tag } from 'lucide-react';
+import { toast } from 'react-toast';
 
 import chevronRightIcon from '../assests/icons/chevron_right.svg';
 import rightArrowWhiteIcon from '../assests/icons/right-arrow-big-white.svg';
 import trashIcon from '../assests/icons/trash_icon.svg';
+
+const AVAILABLE_COUPONS = [
+    { code: 'SHOP20', discount: 20, label: '20% OFF' },
+    { code: 'SHOP10', discount: 10, label: '10% OFF' },
+    { code: 'SAVE30', discount: 30, label: '30% OFF' },
+    { code: 'WELCOME15', discount: 15, label: '15% OFF' },
+];
 
 const CartPage = () => {
     const navigate = useNavigate();
@@ -16,6 +25,7 @@ const CartPage = () => {
     const { cartItems, removeFromCart, increaseQuantity, decreaseQuantity, clearCart, cartSubtotal } = useCart();
 
     const [promoCode, setPromoCode] = useState('');
+    const [appliedCoupon, setAppliedCoupon] = useState(null);
     const [discountPercent, setDiscountPercent] = useState(0);
     const [promoError, setPromoError] = useState('');
     const [showCheckoutModal, setShowCheckoutModal] = useState(false);
@@ -24,23 +34,46 @@ const CartPage = () => {
     const discountAmount = Math.round(cartSubtotal * (discountPercent / 100));
     const totalAmount = Math.max(0, cartSubtotal - discountAmount + deliveryFee);
 
-    const handleApplyPromo = () => {
+    const handleApplyPromo = (explicitCode) => {
         if (cartItems.length === 0) return;
-        const trimmed = promoCode.trim().toUpperCase();
-        if (!trimmed) {
+        const codeToTest = (typeof explicitCode === 'string' ? explicitCode : promoCode).trim().toUpperCase();
+        if (!codeToTest) {
             setPromoError('Please enter a promo code');
             return;
         }
 
-        if (trimmed === 'SHOP20' || trimmed === 'DISCOUNT20') {
-            setDiscountPercent(20);
+        const foundCoupon = AVAILABLE_COUPONS.find(c => c.code === codeToTest);
+        if (foundCoupon) {
+            setAppliedCoupon(foundCoupon);
+            setDiscountPercent(foundCoupon.discount);
+            setPromoCode('');
             setPromoError('');
-        } else if (trimmed === 'SHOP10') {
-            setDiscountPercent(10);
-            setPromoError('');
-        } else {
-            setPromoError('Invalid promo code. Try "SHOP20"');
+            toast.success(`Coupon "${foundCoupon.code}" applied! ${foundCoupon.discount}% discount.`);
+            return;
         }
+
+        if (codeToTest === 'DISCOUNT20') {
+            const aliasCoupon = { code: 'DISCOUNT20', discount: 20, label: '20% OFF' };
+            setAppliedCoupon(aliasCoupon);
+            setDiscountPercent(20);
+            setPromoCode('');
+            setPromoError('');
+            toast.success('Coupon "DISCOUNT20" applied! 20% discount.');
+            return;
+        }
+
+        setPromoError('Invalid promo code. Try "SHOP20", "SAVE30", "WELCOME15", or "SHOP10"');
+        toast.error('Invalid promo code.');
+    };
+
+    const handleRemoveCoupon = () => {
+        if (appliedCoupon) {
+            toast.info(`Coupon "${appliedCoupon.code}" removed.`);
+        }
+        setAppliedCoupon(null);
+        setDiscountPercent(0);
+        setPromoCode('');
+        setPromoError('');
     };
 
     const handleCheckout = () => {
@@ -200,28 +233,66 @@ const CartPage = () => {
                                 </span>
                             </div>
 
-                            <div className="order-summary__promo">
-                                <input
-                                    type="text"
-                                    placeholder="Add promo code"
-                                    className="order-summary__promo-input"
-                                    value={promoCode}
-                                    onChange={(e) => setPromoCode(e.target.value)}
-                                    disabled={cartItems.length === 0}
-                                    onKeyDown={(e) => {
-                                        if (e.key === 'Enter' && cartItems.length > 0) handleApplyPromo();
-                                    }}
-                                />
-                                <button
-                                    type="button"
-                                    className="order-summary__promo-button"
-                                    disabled={cartItems.length === 0}
-                                    onClick={handleApplyPromo}
-                                >
-                                    Apply
-                                </button>
-                            </div>
-                            {promoError && <p className="order-summary__promo-error">{promoError}</p>}
+                            {appliedCoupon ? (
+                                <div className="order-summary__applied-box">
+                                    <div className="order-summary__applied-info">
+                                        <Tag size={15} className="order-summary__applied-icon" />
+                                        <span className="order-summary__applied-code">{appliedCoupon.code}</span>
+                                        <span className="order-summary__applied-discount">(-{appliedCoupon.discount}%)</span>
+                                    </div>
+                                    <button
+                                        type="button"
+                                        className="order-summary__remove-btn"
+                                        onClick={handleRemoveCoupon}
+                                        aria-label="Remove coupon"
+                                    >
+                                        Remove
+                                    </button>
+                                </div>
+                            ) : (
+                                <>
+                                    <div className="order-summary__coupons-row">
+                                        <span className="order-summary__coupons-label">Coupons:</span>
+                                        <div className="order-summary__coupons-tags">
+                                            {AVAILABLE_COUPONS.map((c) => (
+                                                <button
+                                                    key={c.code}
+                                                    type="button"
+                                                    className="order-summary__coupon-tag"
+                                                    onClick={() => handleApplyPromo(c.code)}
+                                                    disabled={cartItems.length === 0}
+                                                    title={`Apply ${c.code}`}
+                                                >
+                                                    {c.code} <span className="order-summary__coupon-tag-off">-{c.discount}%</span>
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+
+                                    <div className="order-summary__promo">
+                                        <input
+                                            type="text"
+                                            placeholder="Add promo code"
+                                            className="order-summary__promo-input"
+                                            value={promoCode}
+                                            onChange={(e) => setPromoCode(e.target.value)}
+                                            disabled={cartItems.length === 0}
+                                            onKeyDown={(e) => {
+                                                if (e.key === 'Enter' && cartItems.length > 0) handleApplyPromo();
+                                            }}
+                                        />
+                                        <button
+                                            type="button"
+                                            className="order-summary__promo-button"
+                                            disabled={cartItems.length === 0}
+                                            onClick={() => handleApplyPromo()}
+                                        >
+                                            Apply
+                                        </button>
+                                    </div>
+                                    {promoError && <p className="order-summary__promo-error">{promoError}</p>}
+                                </>
+                            )}
 
                             <button
                                 type="button"

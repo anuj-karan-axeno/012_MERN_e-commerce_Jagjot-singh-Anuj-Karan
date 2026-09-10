@@ -689,6 +689,21 @@
         color: #7f8c8d;
     }
 
+    &--clickable {
+        cursor: pointer;
+        transition: opacity 0.15s ease, transform 0.15s ease;
+        user-select: none;
+
+        &:hover {
+            opacity: 0.82;
+            transform: scale(1.04);
+        }
+
+        &:active {
+            transform: scale(0.98);
+        }
+    }
+
     &--payment {
         background-color: variables.$dress_style_bg_color;
         color: variables.$primary_color;

@@ -1,5 +1,6 @@
 import './scss/main.scss';
 import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
+import { ToastContainer } from 'react-toast';
 import RegisterPage from './pages/RegisterPage';
 import LoginPage from './pages/LoginPage';
 import AdminPage from './pages/AdminPage';
@@ -25,6 +26,7 @@ function App() {
           <CategoryContextProvider>
             <OrderContextProvider>
               <CartContextProvider>
+                <ToastContainer position="top-right" delay={3000} />
                 <BrowserRouter>
                   <Routes>
                     <Route path="/" element={<HomePage />} />
