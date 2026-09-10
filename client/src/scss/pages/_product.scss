@@ -218,8 +218,8 @@
             width: fit-content;
 
             &--low {
-                color: #c2410c;
-                background-color: #fff7ed;
+                color: variables.$text_orange;
+                background-color: variables.$bg_orange_light;
             }
 
             &--out {
@@ -309,8 +309,8 @@
         &--disabled {
             opacity: 0.45;
             text-decoration: line-through;
-            background-color: #eaeaea;
-            color: #888888;
+            background-color: variables.$bg_gray_disabled;
+            color: variables.$text_muted_gray;
         }
     }
 

@@ -17,6 +17,7 @@ import ShopPage from './pages/ShopPage';
 import ProductDescription from './pages/ProductDescription';
 import CartPage from './pages/CartPage';
 import ProfilePage from './pages/ProfilePage';
+import ScrollToTop from './components/common/ScrollToTop';
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
               <CartContextProvider>
                 <ToastContainer position="top-right" delay={3000} />
                 <BrowserRouter>
+                  <ScrollToTop />
                   <Routes>
                     <Route path="/" element={<HomePage />} />
                     <Route path="/shop" element={<ShopPage />} />

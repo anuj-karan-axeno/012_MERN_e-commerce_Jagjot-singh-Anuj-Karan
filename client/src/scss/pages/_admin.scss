@@ -3,7 +3,7 @@
 
 .admin-page {
     min-height: 100vh;
-    background-color: #fafafa;
+    background-color: variables.$bg_light_alt;
     color: variables.$primary_color;
     display: flex;
     flex-direction: column;
@@ -115,7 +115,7 @@
     display: flex;
     align-items: flex-start;
     gap: 1rem;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+    box-shadow: 0 2px 6px variables.$shadow_soft;
 
     &__info {
         display: flex;
@@ -196,7 +196,7 @@
         color: variables.$primary_color;
 
         &:hover {
-            background-color: #e5e5e5;
+            background-color: variables.$border_light;
         }
     }
 
@@ -361,7 +361,7 @@
         border-color: variables.$primary_color;
 
         .admin-filter-pill__count {
-            background-color: rgba(255, 255, 255, 0.25);
+            background-color: variables.$bg_white_translucent;
             color: variables.$secondary_color;
         }
     }
@@ -372,16 +372,16 @@
     align-items: center;
     gap: 0.65rem;
     padding: 0.85rem 1.25rem;
-    background-color: #fff8e1;
-    border: 1px solid #ffe082;
+    background-color: variables.$bg_warning_amber;
+    border: 1px solid variables.$border_warning;
     border-radius: 0.75rem;
     margin-bottom: 1.5rem;
     font-size: 0.85rem;
-    color: #8d6e63;
+    color: variables.$text_brown;
 
     &__icon {
         flex-shrink: 0;
-        color: #ff8f00;
+        color: variables.$text_warning_amber;
     }
 }
 
@@ -414,7 +414,7 @@
     border: 1px solid variables.$light_grey_color;
     border-radius: 1rem;
     overflow-x: auto;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02);
+    box-shadow: 0 1px 4px variables.$shadow_soft;
 }
 
 .admin-table {
@@ -424,7 +424,7 @@
     font-size: 0.88rem;
 
     th {
-        background-color: #fbfbfb;
+        background-color: variables.$bg_card_subtle;
         padding: 0.95rem 1.25rem;
         font-weight: 700;
         font-size: 0.78rem;
@@ -445,7 +445,7 @@
     }
 
     tr:hover td {
-        background-color: #fafafa;
+        background-color: variables.$bg_light_alt;
     }
 
     &__id {
@@ -519,7 +519,7 @@
 }
 
 .admin-variant-pill {
-    background-color: #f5f5f5;
+    background-color: variables.$bg_gray_light;
     border: 1px solid variables.$light_grey_color;
     padding: 0.15rem 0.45rem;
     border-radius: 0.35rem;
@@ -655,23 +655,23 @@
     text-transform: capitalize;
 
     &--placed {
-        background-color: #ebf5fb;
-        color: #2980b9;
+        background-color: variables.$bg_info_subtle;
+        color: variables.$text_info_blue;
     }
 
     &--processing {
-        background-color: #fef9e7;
-        color: #b7950b;
+        background-color: variables.$bg_warning_subtle;
+        color: variables.$text_warning_gold;
     }
 
     &--shipped {
-        background-color: #f4ecf7;
-        color: #8e44ad;
+        background-color: variables.$bg_purple_subtle;
+        color: variables.$text_purple_dark;
     }
 
     &--delivered {
-        background-color: #eafaf1;
-        color: #27ae60;
+        background-color: variables.$bg_success_subtle;
+        color: variables.$text_success_emerald;
     }
 
     &--cancelled {
@@ -680,13 +680,13 @@
     }
 
     &--active {
-        background-color: #eafaf1;
-        color: #27ae60;
+        background-color: variables.$bg_success_subtle;
+        color: variables.$text_success_emerald;
     }
 
     &--inactive {
-        background-color: #f2f2f2;
-        color: #7f8c8d;
+        background-color: variables.$bg_gray_muted;
+        color: variables.$text_gray_secondary;
     }
 
     &--clickable {
@@ -721,7 +721,7 @@
 .admin-modal-backdrop {
     position: fixed;
     inset: 0;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: variables.$overlay_bg;
     backdrop-filter: blur(2px);
     z-index: 100;
     @include mixins.center;
@@ -732,7 +732,7 @@
 .admin-modal {
     background-color: variables.$secondary_color;
     border-radius: 1.25rem;
-    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 12px 36px variables.$shadow_elevation;
     width: 100%;
     max-height: 90vh;
     overflow-y: auto;
@@ -933,7 +933,7 @@
     border-radius: 0.75rem;
     padding: 1rem;
     text-align: center;
-    background-color: #fafafa;
+    background-color: variables.$bg_light_alt;
     transition: border-color 0.2s ease, background-color 0.2s ease;
 
     &--error {
@@ -1008,7 +1008,7 @@
 }
 
 .admin-order-detail-card {
-    background-color: #fafafa;
+    background-color: variables.$bg_light_alt;
     border: 1px solid variables.$light_grey_color;
     border-radius: 0.75rem;
     padding: 1rem 1.25rem;
@@ -1154,7 +1154,7 @@
     min-height: 100vh;
     @include mixins.center;
     padding: 2rem;
-    background-color: #fafafa;
+    background-color: variables.$bg_light_alt;
 
     &__card {
         background: variables.$secondary_color;
@@ -1163,7 +1163,7 @@
         padding: 2.5rem;
         max-width: 460px;
         text-align: center;
-        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
+        box-shadow: 0 8px 30px variables.$shadow_subtle;
         @include mixins.center(column);
         gap: 0.75rem;
 

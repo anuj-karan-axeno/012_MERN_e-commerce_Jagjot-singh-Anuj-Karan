@@ -48,7 +48,7 @@
     display: flex;
     gap: 1.25em;
     padding: 1.5em 0;
-    border-bottom: 1px solid #e5e5e5;
+    border-bottom: 1px solid variables.$border_light;
 
     &:first-child {
         padding-top: 0;
@@ -183,7 +183,7 @@
 
     &__divider {
         border: none;
-        border-top: 1px solid #e5e5e5;
+        border-top: 1px solid variables.$border_light;
         margin-bottom: 1em;
     }
 
@@ -209,8 +209,8 @@
     }
 
     &__coupon-tag {
-        background: #f7f7f7;
-        border: 1px solid #e5e5e5;
+        background: variables.$bg_gray_card;
+        border: 1px solid variables.$border_light;
         border-radius: 2em;
         padding: 0.3em 0.7em;
         font-family: inherit;
@@ -235,7 +235,7 @@
             border-color: variables.$primary_color;
 
             .order-summary__coupon-tag-off {
-                color: rgba(255, 255, 255, 0.75);
+                color: variables.$text_white_muted;
             }
         }
 
@@ -362,7 +362,7 @@
 .modal-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.5);
+    background: variables.$overlay_bg;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -409,7 +409,7 @@
 .checkout-modal-backdrop {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.55);
+    background: variables.$overlay_bg_dark;
     backdrop-filter: blur(4px);
     display: flex;
     align-items: center;
@@ -432,7 +432,7 @@
     width: 100%;
     max-height: calc(100vh - 5rem);
     margin: auto;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.18);
+    box-shadow: 0 20px 60px variables.$shadow_modal;
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -460,7 +460,7 @@
         transition: all 0.15s ease;
 
         &:hover {
-            background: #e5e5e5;
+            background: variables.$border_light;
             transform: scale(1.05);
         }
     }
@@ -496,9 +496,9 @@
     &__error-alert {
         margin: 0.75em 1.75em 0;
         padding: 0.7em 1em;
-        background: #fef2f2;
-        border: 1px solid #fecaca;
-        color: #991b1b;
+        background: variables.$bg_error_light;
+        border: 1px solid variables.$border_error_light;
+        color: variables.$text_error_dark;
         border-radius: 10px;
         font-size: 0.85em;
         font-weight: 500;
@@ -633,7 +633,7 @@
 
         &:focus {
             border-color: variables.$primary_color;
-            background: #fff;
+            background: variables.$secondary_color;
         }
 
         &--error {
@@ -710,13 +710,13 @@
         text-align: left;
 
         &:hover {
-            background: #fafafa;
-            border-color: rgba(0, 0, 0, 0.3);
+            background: variables.$bg_light_alt;
+            border-color: variables.$border_focus_dark;
         }
 
         &--selected {
             border-color: variables.$primary_color;
-            background: #fbfbfb;
+            background: variables.$bg_card_subtle;
             box-shadow: 0 0 0 1px variables.$primary_color;
         }
     }
@@ -750,7 +750,7 @@
         &--total {
             margin-top: 0.35em;
             padding-top: 0.35em;
-            border-top: 1px solid rgba(0, 0, 0, 0.08);
+            border-top: 1px solid variables.$border_translucent;
             font-size: 1.05em;
             font-weight: 800;
             color: variables.$primary_color;
@@ -784,7 +784,7 @@
         transition: background 0.15s ease;
 
         &:hover:not(:disabled) {
-            background: #262626;
+            background: variables.$primary_dark;
         }
 
         &:disabled {
@@ -805,7 +805,7 @@
     }
 
     &__success-icon {
-        color: #16a34a;
+        color: variables.$text_success_accent;
         margin-bottom: 0.25em;
     }
 
@@ -817,9 +817,9 @@
     &__success-id {
         font-size: 0.85em;
         font-weight: 700;
-        background: #f0fdf4;
-        color: #15803d;
-        border: 1px solid #bbf7d0;
+        background: variables.$bg_success_light;
+        color: variables.$text_success;
+        border: 1px solid variables.$border_success;
         padding: 0.3em 0.85em;
         border-radius: 62px;
         letter-spacing: 0.5px;
@@ -865,7 +865,7 @@
         &--total {
             margin-top: 0.25em;
             padding-top: 0.3em;
-            border-top: 1px solid rgba(0, 0, 0, 0.08);
+            border-top: 1px solid variables.$border_translucent;
 
             strong {
                 font-size: 1.05em;

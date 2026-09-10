@@ -174,8 +174,8 @@
             right: 0;
             background: variables.$secondary_color;
             border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
-            border: 1px solid rgba(0, 0, 0, 0.08);
+            box-shadow: 0 10px 30px variables.$shadow_dropdown;
+            border: 1px solid variables.$border_translucent;
             overflow: hidden;
             z-index: 1000;
             display: flex;
@@ -213,7 +213,7 @@
             text-decoration: none;
             cursor: pointer;
             transition: background 0.15s ease;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+            border-bottom: 1px solid variables.$border_translucent_ultra_light;
 
             &:last-child {
                 border-bottom: none;
@@ -289,8 +289,8 @@
             padding: 11px 16px;
             width: 100%;
             border: 0;
-            border-top: 1px solid rgba(0, 0, 0, 0.06);
-            background: #fafafa;
+            border-top: 1px solid variables.$border_translucent_light;
+            background: variables.$bg_light_alt;
             font-size: 0.82rem;
             font-weight: 600;
             color: variables.$primary_color;
@@ -338,7 +338,7 @@
             display: block;
             padding: 0.6rem 1rem 0.8rem;
             background: variables.$secondary_color;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+            border-bottom: 1px solid variables.$border_translucent_light;
             width: 100%;
         }
     }

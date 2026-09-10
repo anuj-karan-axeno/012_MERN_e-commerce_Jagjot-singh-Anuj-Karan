@@ -23,8 +23,8 @@
     }
 
     &:disabled {
-        background-color: #e0e0e0;
-        color: #888888;
+        background-color: variables.$btn_disabled_bg;
+        color: variables.$text_muted_gray;
         cursor: not-allowed;
         opacity: 0.7;
     }

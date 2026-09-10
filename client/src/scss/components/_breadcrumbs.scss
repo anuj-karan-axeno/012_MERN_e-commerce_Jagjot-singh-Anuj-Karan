@@ -5,12 +5,12 @@
 .breadcrumb {
     padding: 1.5em 0;
 
-    .breadcrumb__list {
+    &__list {
         @include mixins.center($justifyContent: start);
         list-style: none;
         gap: .75em;
 
-        .breadcrumb__item {
+        &__item {
             @include mixins.center;
             gap: .25em;
             color: variables.$medium_grey_color;

@@ -15,7 +15,7 @@ const TESTIMONIALS_DATA = [
     {
         name: 'James L.',
         quote:
-            "As someone who's always on the lookout for unique fashion pieces, I'm thrilled to have stumbled upon Shop.co. The selection of clothes is not only diverse but also on-point with latest trends.",
+            "As someone who's always on the lookout for unique fashion pieces, I'm thrilled to have stumbled upon Shop.co. to have stumbled upon Shop.co.",
     },
 ];
 

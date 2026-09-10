@@ -53,6 +53,7 @@ export const ShopPage = () => {
         if (Object.keys(updates).length > 0) {
             applyFilters(updates);
         }
+        window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
     }, [searchParams, categoryName]);
 
     const activeStyle = urlFilters.dressStyle || appliedFilters.dressStyle;
