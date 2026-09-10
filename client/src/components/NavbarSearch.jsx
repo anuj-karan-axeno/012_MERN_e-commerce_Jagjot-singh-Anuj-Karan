@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { X, Loader2, Package } from 'lucide-react';
 import searchIcon from '../assests/icons/search_icon.svg';
 import api from '../lib/api';
@@ -15,6 +15,16 @@ export const NavbarSearch = ({ isMobile = false, onCloseMobile }) => {
     const searchRef = useRef(null);
     const inputRef = useRef(null);
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
+
+    useEffect(() => {
+        const query = searchParams.get('search');
+        if (!query) {
+            if (searchTerm) setSearchTerm('');
+        } else if (query !== searchTerm) {
+            setSearchTerm(query);
+        }
+    }, [searchParams]);
 
     useEffect(() => {
         const timer = setTimeout(() => {

@@ -1,6 +1,6 @@
 import '../scss/pages/_shop.scss';
 import { useState, useEffect } from 'react';
-import { Link, useSearchParams, useParams } from 'react-router-dom';
+import { Link, useSearchParams, useParams, useNavigate } from 'react-router-dom';
 import { useProducts } from '../hooks/ProductContext';
 import Navbar from '../components/Navbar';
 import FooterSection from '../components/home/FooterSection';
@@ -37,9 +37,10 @@ const getUrlFilters = (searchParams, categoryParam) => {
 };
 
 export const ShopPage = () => {
-    const { products, loading, appliedFilters, applyFilters } = useProducts();
+    const { products, loading, appliedFilters, applyFilters, resetFilters } = useProducts();
     const [searchParams] = useSearchParams();
     const { categoryName } = useParams();
+    const navigate = useNavigate();
     const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
 
     const urlFilters = getUrlFilters(searchParams, categoryName);
@@ -105,6 +106,16 @@ export const ShopPage = () => {
                             <div className="shop-empty">
                                 <h3>No Products Found</h3>
                                 <p>Try adjusting your search or filters to find what you're looking for.</p>
+                                <button
+                                    type="button"
+                                    className="button button--primary shop-empty__reset-btn"
+                                    onClick={() => {
+                                        resetFilters();
+                                        navigate('/shop');
+                                    }}
+                                >
+                                    Clear All Filters
+                                </button>
                             </div>
                         ) : (
                             <ul className="shop-grid">

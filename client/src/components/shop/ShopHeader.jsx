@@ -62,10 +62,10 @@ export const ShopHeader = ({ onOpenMobileFilters, title }) => {
                         value={appliedFilters.sort || 'popular'}
                         onChange={handleSortChange}
                     >
-                        <option value="popular">Most Popular</option>
+                     
+                        <option value="newest">Newest</option>
                         <option value="price-asc">Price: Low to High</option>
                         <option value="price-desc">Price: High to Low</option>
-                        <option value="newest">Newest</option>
                     </select>
                 </div>
 

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useProducts } from '../../hooks/ProductContext';
 import { useCategories } from '../../hooks/CategoryContext';
 
@@ -27,6 +28,8 @@ const STEP = 50;
 export const ShopFilters = ({ onClose, isMobile = false }) => {
     const { filters, setFilter, applyFilters, resetFilters } = useProducts();
     const { categories } = useCategories();
+    const [searchParams] = useSearchParams();
+    const navigate = useNavigate();
 
     const [isPriceOpen, setIsPriceOpen] = useState(true);
     const [isSizeOpen, setIsSizeOpen] = useState(true);
@@ -85,6 +88,8 @@ export const ShopFilters = ({ onClose, isMobile = false }) => {
         }
     };
 
+    const activeSearch = (searchParams.get('search') || filters.search || '').trim();
+
     const handleApply = () => {
         applyFilters();
         if (onClose) onClose();
@@ -92,7 +97,16 @@ export const ShopFilters = ({ onClose, isMobile = false }) => {
 
     const handleReset = () => {
         resetFilters();
+        navigate('/shop');
         if (onClose) onClose();
+    };
+
+    const handleClearSearch = () => {
+        setFilter('search', '');
+        const nextParams = new URLSearchParams(searchParams);
+        nextParams.delete('search');
+        const remaining = nextParams.toString();
+        navigate(remaining ? `${window.location.pathname}?${remaining}` : window.location.pathname);
     };
 
     const hasActiveFilters = Boolean(
@@ -100,7 +114,8 @@ export const ShopFilters = ({ onClose, isMobile = false }) => {
         filters.minPrice ||
         filters.maxPrice ||
         filters.size ||
-        filters.dressStyle
+        filters.dressStyle ||
+        activeSearch
     );
 
     return (
@@ -124,6 +139,8 @@ export const ShopFilters = ({ onClose, isMobile = false }) => {
                     </button>
                 )}
             </div>
+
+
 
             <hr className="shop-filters__divider" />
 
