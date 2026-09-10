@@ -13,16 +13,18 @@ const DEFAULT_FILTERS = {
     search: '',
 };
 
+const DEFAULT_PAGINATION = {
+    totalProducts: 0,
+    totalPages: 1,
+    currentPage: 1,
+    limit: 9,
+    hasNextPage: false,
+    hasPrevPage: false,
+};
+
 export const ProductContextProvider = ({ children }) => {
     const [products, setProducts] = useState([]);
-    const [pagination, setPagination] = useState({
-        totalProducts: 0,
-        totalPages: 1,
-        currentPage: 1,
-        limit: 9,
-        hasNextPage: false,
-        hasPrevPage: false,
-    });
+    const [pagination, setPagination] = useState(DEFAULT_PAGINATION);
     const [filters, setFilters] = useState(DEFAULT_FILTERS);
     const [appliedFilters, setAppliedFilters] = useState(DEFAULT_FILTERS);
     const [currentPage, setCurrentPage] = useState(1);
@@ -34,36 +36,37 @@ export const ProductContextProvider = ({ children }) => {
             setLoading(true);
             setError(null);
 
+            const merged = { ...appliedFilters, ...customParams };
             const params = {
                 page: customParams.page ?? currentPage,
                 limit: customParams.limit ?? 9,
-                sort: customParams.sort ?? appliedFilters.sort,
-                ...(appliedFilters.category ? { category: appliedFilters.category } : {}),
-                ...(appliedFilters.minPrice ? { minPrice: appliedFilters.minPrice } : {}),
-                ...(appliedFilters.maxPrice ? { maxPrice: appliedFilters.maxPrice } : {}),
-                ...(appliedFilters.size ? { size: appliedFilters.size } : {}),
-                ...(appliedFilters.dressStyle ? { dressStyle: appliedFilters.dressStyle } : {}),
-                ...(appliedFilters.search ? { search: appliedFilters.search } : {}),
-                ...customParams,
+                sort: merged.sort || 'popular',
             };
+
+            ['category', 'minPrice', 'maxPrice', 'size', 'dressStyle', 'search'].forEach((key) => {
+                if (merged[key]) {
+                    params[key] = merged[key];
+                }
+            });
 
             const res = await api.get('/products', { params });
             if (res.data?.success) {
                 const responseData = res.data.data;
-                if (Array.isArray(responseData)) {
-                    const activeOnly = responseData.filter(p => !p.status || p.status === 'active');
-                    setProducts(activeOnly);
-                    setPagination(prev => ({
-                        ...prev,
+                const items = Array.isArray(responseData) ? responseData : (responseData.products || []);
+                const activeOnly = items.filter(p => !p.status || p.status === 'active');
+                setProducts(activeOnly);
+
+                if (responseData.pagination) {
+                    setPagination(responseData.pagination);
+                } else {
+                    setPagination({
                         totalProducts: activeOnly.length,
                         totalPages: Math.ceil(activeOnly.length / 9) || 1,
-                    }));
-                } else {
-                    const activeOnly = (responseData.products || []).filter(p => !p.status || p.status === 'active');
-                    setProducts(activeOnly);
-                    if (responseData.pagination) {
-                        setPagination(responseData.pagination);
-                    }
+                        currentPage,
+                        limit: 9,
+                        hasNextPage: false,
+                        hasPrevPage: false,
+                    });
                 }
             }
         } catch (err) {
@@ -77,11 +80,11 @@ export const ProductContextProvider = ({ children }) => {
     const fetchProductById = useCallback(async (id) => {
         try {
             const res = await api.get(`/products/${id}`);
-            const prod = res.data?.data;
-            if (!prod || prod.status === 'inactive') {
+            const product = res.data?.data;
+            if (!product || product.status === 'inactive') {
                 throw new Error("Product not found");
             }
-            return prod;
+            return product;
         } catch (err) {
             const message = err.response?.data?.message || err.message || "Failed to fetch product";
             throw new Error(message, { cause: err });
@@ -89,20 +92,14 @@ export const ProductContextProvider = ({ children }) => {
     }, []);
 
     const setFilter = (key, value) => {
-        setFilters(prev => ({
-            ...prev,
-            [key]: value,
-        }));
+        setFilters(prev => ({ ...prev, [key]: value }));
     };
 
-    const applyFilters = (customFilters) => {
+    const applyFilters = (customFilters = {}) => {
         setCurrentPage(1);
-        if (customFilters) {
-            setFilters(prev => ({ ...prev, ...customFilters }));
-            setAppliedFilters(prev => ({ ...prev, ...customFilters }));
-        } else {
-            setAppliedFilters({ ...filters });
-        }
+        const nextFilters = { ...filters, ...customFilters };
+        setFilters(nextFilters);
+        setAppliedFilters(nextFilters);
     };
 
     const resetFilters = () => {
@@ -111,15 +108,9 @@ export const ProductContextProvider = ({ children }) => {
         setCurrentPage(1);
     };
 
-    const setSort = (sortValue) => {
-        setFilters(prev => ({ ...prev, sort: sortValue }));
-        setAppliedFilters(prev => ({ ...prev, sort: sortValue }));
-        setCurrentPage(1);
-    };
+    const setSort = (sortValue) => applyFilters({ sort: sortValue });
 
-    const setPage = (pageNumber) => {
-        setCurrentPage(pageNumber);
-    };
+    const setPage = (pageNumber) => setCurrentPage(pageNumber);
 
     useEffect(() => {
         fetchProducts();

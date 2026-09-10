@@ -15,8 +15,25 @@ const formatTitle = (text) => {
     if (!text) return '';
     return text
         .split(' ')
-        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
         .join(' ');
+};
+
+const getUrlFilters = (searchParams, categoryParam) => {
+    const category = searchParams.get('category') || categoryParam || '';
+    const dressStyle =
+        searchParams.get('dressStyle') ||
+        searchParams.get('style') ||
+        searchParams.get('dressstyle') ||
+        searchParams.get('dress_style') ||
+        '';
+    const search = searchParams.get('search') || '';
+
+    return {
+        category: category.toLowerCase().trim(),
+        dressStyle: dressStyle.toLowerCase().trim(),
+        search: search.trim(),
+    };
 };
 
 export const ShopPage = () => {
@@ -25,60 +42,28 @@ export const ShopPage = () => {
     const { categoryName } = useParams();
     const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
 
+    const urlFilters = getUrlFilters(searchParams, categoryName);
+
     useEffect(() => {
-        const catParam = searchParams.get('category') || categoryName || '';
-        const styleParam =
-            searchParams.get('dressStyle') ||
-            searchParams.get('dressstyle') ||
-            searchParams.get('dress_style') ||
-            searchParams.get('style') ||
-            '';
-
-        const searchParam = searchParams.get('search') || '';
-
-        const normalizedCat = catParam.toLowerCase().trim();
-        const normalizedStyle = styleParam.toLowerCase().trim();
-        const normalizedSearch = searchParam.trim();
-
         const updates = {};
-        let needsUpdate = false;
+        if (urlFilters.category !== appliedFilters.category) updates.category = urlFilters.category;
+        if (urlFilters.dressStyle !== appliedFilters.dressStyle) updates.dressStyle = urlFilters.dressStyle;
+        if (urlFilters.search !== (appliedFilters.search || '')) updates.search = urlFilters.search;
 
-        if (normalizedCat !== appliedFilters.category) {
-            updates.category = normalizedCat;
-            needsUpdate = true;
-        }
-        if (normalizedStyle !== appliedFilters.dressStyle) {
-            updates.dressStyle = normalizedStyle;
-            needsUpdate = true;
-        }
-        if (normalizedSearch !== (appliedFilters.search || '')) {
-            updates.search = normalizedSearch;
-            needsUpdate = true;
-        }
-
-        if (needsUpdate) {
+        if (Object.keys(updates).length > 0) {
             applyFilters(updates);
         }
     }, [searchParams, categoryName]);
 
-    const paramStyle =
-        searchParams.get('dressStyle') ||
-        searchParams.get('dressstyle') ||
-        searchParams.get('dress_style') ||
-        searchParams.get('style') ||
-        '';
-    const paramCategory = searchParams.get('category') || categoryName || '';
-    const currentSearch = searchParams.get('search') || '';
+    const activeStyle = urlFilters.dressStyle || appliedFilters.dressStyle;
+    const activeCategory = urlFilters.category || appliedFilters.category;
 
-    const effectiveStyle = paramStyle || appliedFilters.dressStyle || '';
-    const effectiveCategory = paramCategory || appliedFilters.category || '';
-
-    const activeTitle = currentSearch
-        ? `Search: "${currentSearch}"`
-        : effectiveStyle
-        ? formatTitle(effectiveStyle)
-        : effectiveCategory
-        ? formatTitle(effectiveCategory)
+    const pageTitle = urlFilters.search
+        ? `Search: "${urlFilters.search}"`
+        : activeStyle
+        ? formatTitle(activeStyle)
+        : activeCategory
+        ? formatTitle(activeCategory)
         : 'Casual';
 
     return (
@@ -95,7 +80,7 @@ export const ShopPage = () => {
                             <img src={chevronRightIcon} alt="" />
                         </li>
                         <li className="breadcrumb__item breadcrumb__item--current" aria-current="page">
-                            {activeTitle}
+                            {pageTitle}
                         </li>
                     </ul>
                 </nav>
@@ -107,7 +92,7 @@ export const ShopPage = () => {
 
                     <main className="shop-layout__content">
                         <ShopHeader
-                            title={activeTitle}
+                            title={pageTitle}
                             onOpenMobileFilters={() => setIsMobileFilterOpen(true)}
                         />
 
@@ -115,27 +100,25 @@ export const ShopPage = () => {
                             <div className="shop-loading">
                                 <p>Loading products...</p>
                             </div>
-                        ) : products.filter((p) => !p.status || p.status === 'active').length === 0 ? (
+                        ) : products.length === 0 ? (
                             <div className="shop-empty">
                                 <h3>No Products Found</h3>
                                 <p>Try adjusting your search or filters to find what you're looking for.</p>
                             </div>
                         ) : (
                             <ul className="shop-grid">
-                                {products
-                                    .filter((p) => !p.status || p.status === 'active')
-                                    .map((product) => (
-                                        <ProductCard
-                                            key={product._id}
-                                            id={product._id}
-                                            name={product.name}
-                                            price={product.price}
-                                            discountPrice={product.discountPrice}
-                                            discountPercentage={product.discountPercentage}
-                                            imgURL={product.thumbnailImage}
-                                            rating={product.rating || 4.5}
-                                        />
-                                    ))}
+                                {products.map((product) => (
+                                    <ProductCard
+                                        key={product._id}
+                                        id={product._id}
+                                        name={product.name}
+                                        price={product.price}
+                                        discountPrice={product.discountPrice}
+                                        discountPercentage={product.discountPercentage}
+                                        imgURL={product.thumbnailImage}
+                                        rating={product.rating || 4.5}
+                                    />
+                                ))}
                             </ul>
                         )}
 

@@ -232,6 +232,10 @@ export const fetchCart = async (req, res) => {
             return successResponse(res, 200, "Successfully fetched cart", { user: userId, items: [] });
         }
 
+        if (Array.isArray(cart.items)) {
+            cart.items = cart.items.filter(item => item.product && item.product.status === "active");
+        }
+
         return successResponse(res, 200, "Successfully fetched cart", cart);
 
     } catch (error) {

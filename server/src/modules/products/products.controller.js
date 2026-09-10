@@ -6,7 +6,7 @@ import path from 'path'
 
 export const addProduct = async (req, res) => {
     try {
-        const { name, description, price, categories, variants, discountPrice, discountPercentage } = req.body ?? {}
+        const { name, description, price, categories, variants, discountPrice, discountPercentage, status } = req.body ?? {}
         console.log(req.body)
         const errors = []
 
@@ -48,7 +48,7 @@ export const addProduct = async (req, res) => {
             const ext = path.extname(thumbnailFile.originalname || '').toLowerCase()
             const mime = thumbnailFile.mimetype?.toLowerCase()
             if (!ALLOWED_MIME_TYPES.includes(mime) && !ALLOWED_EXTENSIONS.includes(ext)) {
-                errors.push({ field: "thumbnailImage", message: "Thumbnail must be a JPG, PNG, WEBP, or HEIC image" })
+                errors.push({ field: "thumbnailImage", message: `Thumbnail image "${thumbnailFile.originalname}" must be a JPG, PNG, WEBP, or HEIC image` })
             }
         }
 
@@ -141,7 +141,8 @@ export const addProduct = async (req, res) => {
             variants: parsedVariants.map(v => ({
                 size: v.size.toString().trim(),
                 quantity: Number(v.quantity)
-            }))
+            })),
+            status: status === "inactive" ? "inactive" : "active"
         })
 
         return successResponse(res, 201, "Product created successfully", product)
@@ -179,7 +180,7 @@ export const deleteProduct = async (req, res) => {
 
 export const updateProduct = async (req, res) => {
     try {
-        const { productId, id, name, description, price, discountPrice, discountPercentage, categories, variants, status } = req.body ?? {};
+        const { productId, id, name, description, price, discountPrice, discountPercentage, categories, category, variants, status } = req.body ?? {};
         const targetId = productId || id;
         if (!targetId) {
             return errorResponse(res, 400, "Product ID is required");
@@ -193,7 +194,9 @@ export const updateProduct = async (req, res) => {
         const updateData = {};
         if (name !== undefined) updateData.name = name.trim();
         if (description !== undefined) updateData.description = description.trim();
-        if (status !== undefined) updateData.status = status;
+        if (status !== undefined && (status === 'active' || status === 'inactive')) {
+            updateData.status = status;
+        }
 
         const effectiveBasePrice = price !== undefined ? Number(price) : existing.price;
         if (price !== undefined) {
@@ -218,8 +221,9 @@ export const updateProduct = async (req, res) => {
             updateData.discountPercentage = newDiscountPercentage;
         }
 
-        if (categories !== undefined) {
-            let catIds = typeof categories === 'string' ? JSON.parse(categories) : categories;
+        const catData = categories !== undefined ? categories : category;
+        if (catData !== undefined) {
+            let catIds = typeof catData === 'string' ? JSON.parse(catData) : catData;
             if (Array.isArray(catIds)) updateData.category = catIds;
         }
 
@@ -390,7 +394,7 @@ export const fetchProductById = async (req, res) => {
 
         const product = await productModel.findById(id);
 
-        if (!product) {
+        if (!product || (product.status !== "active" && req.query.all !== "true")) {
             return errorResponse(res, 404, "Product not found");
         }
         return successResponse(res, 200, "Successfully fetched product", product);
