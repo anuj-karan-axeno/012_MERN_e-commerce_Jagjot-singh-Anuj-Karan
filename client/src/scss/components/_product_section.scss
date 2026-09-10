@@ -28,7 +28,6 @@
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 1.25em;
     list-style: none;
-    padding: 0 variables.$container_padding_x_desktop;
     overflow-x: visible;
 
     .product-card__item {
