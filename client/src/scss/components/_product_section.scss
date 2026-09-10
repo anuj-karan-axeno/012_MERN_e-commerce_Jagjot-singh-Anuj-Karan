@@ -28,7 +28,13 @@
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 1.25em;
     list-style: none;
+    padding: 0 variables.$container_padding_x_desktop;
     overflow-x: visible;
+
+    &.might-like {
+        padding-left: 0;
+        padding-right: 0;
+    }
 
     .product-card__item {
         width: 100%;
@@ -61,6 +67,12 @@
 
     @media (max-width: 1200px) {
         gap: 1em;
+        padding: 0 variables.$container_padding_x_tablet;
+
+        &.might-like {
+            padding-left: 0;
+            padding-right: 0;
+        }
     }
 
     @media (max-width: 992px) {
