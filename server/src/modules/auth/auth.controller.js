@@ -112,3 +112,24 @@ export const registerUser = async (req, res) => {
         return errorResponse(res, 500, "Internal Server Error");
     }
 }
+
+export const logoutUser = async (req, res) => {
+    try {
+        res.clearCookie("accessToken", {
+            sameSite: 'none',
+            secure: true,
+            httpOnly: true
+        });
+        res.cookie("accessToken", "", {
+            maxAge: 0,
+            expires: new Date(0),
+            sameSite: 'none',
+            secure: true,
+            httpOnly: true
+        });
+        return successResponse(res, 200, "Successfully logged out");
+    } catch (error) {
+        console.log(error);
+        return errorResponse(res, 500, "Internal Server Error");
+    }
+};
