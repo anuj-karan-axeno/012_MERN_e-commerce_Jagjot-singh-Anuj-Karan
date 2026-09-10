@@ -9,150 +9,145 @@
     @media (max-width: 768px) {
         padding: 2em variables.$container_padding_x_mobile;
     }
-}
 
-.auth-form-wrapper {
-    width: 100%;
-    max-width: 30em;
-}
-
-.auth-form__title {
-    font-size: 1.75em;
-    font-weight: 800;
-    margin-bottom: 0.5em;
-}
-
-.auth-form__subtitle {
-    color: variables.$medium_grey_color;
-    font-size: 0.9em;
-    margin-bottom: 2em;
+    &-form-wrapper {
+        width: 100%;
+        max-width: 30em;
+    }
 }
 
 .auth-form {
     display: flex;
     flex-direction: column;
     gap: 1.5em;
-}
 
-.auth-form__group {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1em;
-    padding: 1.25em;
-    border: 1px solid variables.$grey_color_1;
-    border-radius: 0.75em;
-}
-
-.auth-form__group-title {
-    grid-column: 1 / -1;
-    font-size: 1em;
-    font-weight: 700;
-}
-
-.auth-form__field {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5em;
-}
-
-.auth-form__field--wide {
-    grid-column: 1 / -1;
-}
-
-.auth-form__label {
-    font-size: 0.875em;
-    font-weight: 600;
-}
-
-.auth-form__input {
-    width: 100%;
-    border: 1px solid variables.$grey_color_1;
-    border-radius: 0.75em;
-    padding: 0.9em 1.1em;
-    font-size: 0.9em;
-    transition: border-color 0.2s ease, outline-color 0.2s ease;
-
-    &:focus {
-        outline: 2px solid variables.$primary_color;
-        outline-offset: 2px;
+    &__title {
+        font-size: 1.75em;
+        font-weight: 800;
+        margin-bottom: 0.5em;
     }
 
-    &--error {
-        border-color: variables.$primary_red_color;
+    &__subtitle {
+        color: variables.$medium_grey_color;
+        font-size: 0.9em;
+        margin-bottom: 2em;
+    }
+
+    &__group {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1em;
+        padding: 1.25em;
+        border: 1px solid variables.$grey_color_1;
+        border-radius: 0.75em;
+
+        @media (max-width: 560px) {
+            grid-template-columns: 1fr;
+            padding: 1em;
+        }
+
+        &-title {
+            grid-column: 1 / -1;
+            font-size: 1em;
+            font-weight: 700;
+        }
+    }
+
+    &__field {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5em;
+
+        &--wide {
+            grid-column: 1 / -1;
+
+            @media (max-width: 560px) {
+                grid-column: auto;
+            }
+        }
+
+        &-error {
+            color: variables.$primary_red_color;
+            font-size: 0.8em;
+            font-weight: 500;
+            @include mixins.center($justifyContent: flex-start);
+            gap: 0.35em;
+            margin-top: 0.15em;
+        }
+    }
+
+    &__label {
+        font-size: 0.875em;
+        font-weight: 600;
+    }
+
+    &__input {
+        width: 100%;
+        border: 1px solid variables.$grey_color_1;
+        border-radius: 0.75em;
+        padding: 0.9em 1.1em;
+        font-size: 0.9em;
+        transition: border-color 0.2s ease, outline-color 0.2s ease;
 
         &:focus {
-            outline: 2px solid variables.$primary_red_color;
+            outline: 2px solid variables.$primary_color;
             outline-offset: 2px;
         }
-    }
-}
 
-.auth-form__field-error {
-    color: variables.$primary_red_color;
-    font-size: 0.8em;
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    gap: 0.35em;
-    margin-top: 0.15em;
-}
+        &--error {
+            border-color: variables.$primary_red_color;
 
-.auth-form__submit {
-    background: variables.$primary_color;
-    color: variables.$secondary_color;
-    border: none;
-    border-radius: 3em;
-    padding: 1em;
-    font-weight: 600;
-    cursor: pointer;
-    transition: opacity 0.2s;
-}
-
-.auth-form__submit:disabled {
-    opacity: 0.7;
-    cursor: not-allowed;
-}
-
-.auth-form__error {
-    color: variables.$primary_red_color;
-    background-color: variables.$secondary_red_color;
-    border: 1px solid rgba(255, 51, 51, 0.25);
-    border-radius: 0.5em;
-    padding: 0.75em 1em;
-    font-size: 0.875em;
-    font-weight: 500;
-    text-align: center;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5em;
-}
-
-.auth-form__switch {
-    font-size: 0.875em;
-    color: variables.$medium_grey_color;
-    text-align: center;
-    margin-top: 0.25em;
-
-    a {
-        color: variables.$primary_color;
-        font-weight: 700;
-        text-decoration: underline;
-        margin-left: 0.3em;
-
-        &:hover {
-            opacity: 0.7;
+            &:focus {
+                outline: 2px solid variables.$primary_red_color;
+                outline-offset: 2px;
+            }
         }
     }
-}
 
-@media (max-width: 560px) {
-    .auth-form__group {
-        grid-template-columns: 1fr;
+    &__submit {
+        background: variables.$primary_color;
+        color: variables.$secondary_color;
+        border: none;
+        border-radius: 3em;
         padding: 1em;
+        font-weight: 600;
+        cursor: pointer;
+        transition: opacity 0.2s;
+
+        &:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
     }
 
-    .auth-form__field--wide {
-        grid-column: auto;
+    &__error {
+        color: variables.$primary_red_color;
+        background-color: variables.$secondary_red_color;
+        border: 1px solid rgba(255, 51, 51, 0.25);
+        border-radius: 0.5em;
+        padding: 0.75em 1em;
+        font-size: 0.875em;
+        font-weight: 500;
+        text-align: center;
+        @include mixins.center;
+        gap: 0.5em;
+    }
+
+    &__switch {
+        font-size: 0.875em;
+        color: variables.$medium_grey_color;
+        text-align: center;
+        margin-top: 0.25em;
+
+        a {
+            color: variables.$primary_color;
+            font-weight: 700;
+            text-decoration: underline;
+            margin-left: 0.3em;
+
+            &:hover {
+                opacity: 0.7;
+            }
+        }
     }
 }

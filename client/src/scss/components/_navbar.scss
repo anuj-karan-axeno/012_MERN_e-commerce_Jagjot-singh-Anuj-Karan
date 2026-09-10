@@ -10,9 +10,22 @@
         font-size: .875em;
         font-weight: 400;
 
+        a {
+            color: variables.$secondary_color;
+        }
+
         &-highlight {
+            color: variables.$secondary_color;
             font-weight: 600;
             text-decoration: underline;
+
+            &:visited {
+                color: variables.$secondary_color;
+            }
+
+            &:hover {
+                opacity: 0.8;
+            }
         }
 
         &-cancel {

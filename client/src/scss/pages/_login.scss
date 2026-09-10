@@ -9,73 +9,122 @@
     @media (max-width: 768px) {
         padding: 2em variables.$container_padding_x_mobile;
     }
-}
 
-.auth-form-wrapper {
-    width: 100%;
-    max-width: 26em;
-}
-
-.auth-form__title {
-    font-size: 1.75em;
-    font-weight: 800;
-    margin-bottom: 0.5em;
-}
-
-.auth-form__subtitle {
-    color: variables.$medium_grey_color;
-    font-size: 0.9em;
-    margin-bottom: 2em;
+    &-form-wrapper {
+        width: 100%;
+        max-width: 26em;
+    }
 }
 
 .auth-form {
     display: flex;
     flex-direction: column;
     gap: 1.25em;
-}
 
-.auth-form__field {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5em;
-}
-
-.auth-form__label {
-    font-size: 0.875em;
-    font-weight: 600;
-}
-
-.auth-form__input {
-    border: 1px solid variables.$grey_color_1;
-    border-radius: 0.75em;
-    padding: 0.9em 1.1em;
-    font-size: 0.9em;
-
-    &:focus {
-        outline: 2px solid variables.$primary_color;
-        outline-offset: 2px;
+    &__title {
+        font-size: 1.75em;
+        font-weight: 800;
+        margin-bottom: 0.5em;
     }
-}
 
-.auth-form__submit {
-    background: variables.$primary_color;
-    color: variables.$secondary_color;
-    border: none;
-    border-radius: 3em;
-    padding: 1em;
-    font-weight: 600;
-    margin-top: 0.5em;
-    cursor: pointer;
-}
+    &__subtitle {
+        color: variables.$medium_grey_color;
+        font-size: 0.9em;
+        margin-bottom: 2em;
+    }
 
-.auth-form__error {
-    color: variables.$primary_red_color;
-    font-size: 0.875em;
-    margin-bottom: 1em;
-    text-align: center;
-    display: none;
+    &__field {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5em;
 
-    &--visible {
-        display: block;
+        &-error {
+            color: variables.$primary_red_color;
+            font-size: 0.8em;
+            font-weight: 500;
+            @include mixins.center($justifyContent: flex-start);
+            gap: 0.35em;
+            margin-top: 0.15em;
+        }
+    }
+
+    &__label {
+        font-size: 0.875em;
+        font-weight: 600;
+    }
+
+    &__input {
+        width: 100%;
+        border: 1px solid variables.$grey_color_1;
+        border-radius: 0.75em;
+        padding: 0.9em 1.1em;
+        font-size: 0.9em;
+        transition: border-color 0.2s ease, outline-color 0.2s ease;
+
+        &:focus {
+            outline: 2px solid variables.$primary_color;
+            outline-offset: 2px;
+        }
+
+        &--error {
+            border-color: variables.$primary_red_color;
+
+            &:focus {
+                outline: 2px solid variables.$primary_red_color;
+                outline-offset: 2px;
+            }
+        }
+    }
+
+    &__submit {
+        background: variables.$primary_color;
+        color: variables.$secondary_color;
+        border: none;
+        border-radius: 3em;
+        padding: 1em;
+        font-weight: 600;
+        margin-top: 0.5em;
+        cursor: pointer;
+        transition: opacity 0.2s;
+
+        &:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+    }
+
+    &__error {
+        color: variables.$primary_red_color;
+        background-color: variables.$secondary_red_color;
+        border: 1px solid rgba(255, 51, 51, 0.25);
+        border-radius: 0.5em;
+        padding: 0.75em 1em;
+        font-size: 0.875em;
+        font-weight: 500;
+        text-align: center;
+        @include mixins.center;
+        gap: 0.5em;
+
+        &--visible {
+            display: flex;
+        }
+    }
+
+    &__switch {
+        font-size: 0.875em;
+        color: variables.$medium_grey_color;
+        text-align: center;
+        margin-top: 0.25em;
+
+        a {
+            color: variables.$primary_color;
+            font-weight: 700;
+            text-decoration: underline;
+            margin-left: 0.3em;
+
+            &:hover {
+                opacity: 0.7;
+            }
+        }
     }
 }
