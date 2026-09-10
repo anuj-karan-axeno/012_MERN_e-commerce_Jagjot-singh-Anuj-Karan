@@ -34,8 +34,11 @@ export const ShopPage = () => {
             searchParams.get('style') ||
             '';
 
+        const searchParam = searchParams.get('search') || '';
+
         const normalizedCat = catParam.toLowerCase().trim();
         const normalizedStyle = styleParam.toLowerCase().trim();
+        const normalizedSearch = searchParam.trim();
 
         const updates = {};
         let needsUpdate = false;
@@ -46,6 +49,10 @@ export const ShopPage = () => {
         }
         if (normalizedStyle !== appliedFilters.dressStyle) {
             updates.dressStyle = normalizedStyle;
+            needsUpdate = true;
+        }
+        if (normalizedSearch !== (appliedFilters.search || '')) {
+            updates.search = normalizedSearch;
             needsUpdate = true;
         }
 
@@ -61,11 +68,14 @@ export const ShopPage = () => {
         searchParams.get('style') ||
         '';
     const paramCategory = searchParams.get('category') || categoryName || '';
+    const currentSearch = searchParams.get('search') || '';
 
     const effectiveStyle = paramStyle || appliedFilters.dressStyle || '';
     const effectiveCategory = paramCategory || appliedFilters.category || '';
 
-    const activeTitle = effectiveStyle
+    const activeTitle = currentSearch
+        ? `Search: "${currentSearch}"`
+        : effectiveStyle
         ? formatTitle(effectiveStyle)
         : effectiveCategory
         ? formatTitle(effectiveCategory)

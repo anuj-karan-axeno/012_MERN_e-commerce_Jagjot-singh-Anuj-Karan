@@ -23,37 +23,93 @@
 }
 
 .products-container {
-    overflow-x: auto;
     width: 100%;
-    display: flex;
-    justify-content: flex-start;
-    align-items: flex-start;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 1.25em;
     list-style: none;
-    padding: 0 variables.$container_padding_x_desktop 1em;
-    scroll-behavior: smooth;
-    scrollbar-width: thin;
-    scrollbar-color: variables.$light_grey_color transparent;
+    padding: 0 variables.$container_padding_x_desktop;
+    overflow-x: visible;
 
-    &::-webkit-scrollbar {
-        height: 6px;
+    .product-card__item {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        flex: 1 1 0;
     }
 
-    &::-webkit-scrollbar-track {
-        background: transparent;
+    .product-card {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
     }
 
-    &::-webkit-scrollbar-thumb {
-        background: variables.$light_grey_color;
-        border-radius: 3px;
+    .product-card__link {
+        width: 100%;
+        max-width: 100%;
     }
 
-    & > li {
-        list-style: none;
-        flex-shrink: 0;
+    .product-card__image-container,
+    .product-card__image-wrapper {
+        width: 100%;
+        max-width: 100%;
     }
 
-    @media (max-width:992px) {
+    .product-card__image {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    @media (max-width: 1200px) {
+        gap: 1em;
+    }
+
+    @media (max-width: 992px) {
+        display: flex;
+        overflow-x: auto;
+        justify-content: flex-start;
+        align-items: flex-start;
+        gap: 1.25em;
         padding: 0 variables.$container_padding_x_mobile 1em;
+        scroll-behavior: smooth;
+        scrollbar-width: thin;
+        scrollbar-color: variables.$light_grey_color transparent;
+
+        &::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        &::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background: variables.$light_grey_color;
+            border-radius: 3px;
+        }
+
+        .product-card__item {
+            flex: 0 0 240px;
+            width: 240px;
+            max-width: 240px;
+        }
+
+        .product-card {
+            width: 240px;
+            max-width: 240px;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .product-card__item {
+            flex: 0 0 200px;
+            width: 200px;
+            max-width: 200px;
+        }
+
+        .product-card {
+            width: 200px;
+            max-width: 200px;
+        }
     }
 }

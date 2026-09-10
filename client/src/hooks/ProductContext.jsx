@@ -10,6 +10,7 @@ const DEFAULT_FILTERS = {
     size: '',
     dressStyle: '',
     sort: 'popular',
+    search: '',
 };
 
 export const ProductContextProvider = ({ children }) => {
@@ -42,6 +43,7 @@ export const ProductContextProvider = ({ children }) => {
                 ...(appliedFilters.maxPrice ? { maxPrice: appliedFilters.maxPrice } : {}),
                 ...(appliedFilters.size ? { size: appliedFilters.size } : {}),
                 ...(appliedFilters.dressStyle ? { dressStyle: appliedFilters.dressStyle } : {}),
+                ...(appliedFilters.search ? { search: appliedFilters.search } : {}),
                 ...customParams,
             };
 

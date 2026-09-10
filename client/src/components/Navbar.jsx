@@ -3,18 +3,19 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../hooks/AuthContext';
 import { useCart } from '../hooks/CartContext';
 import brandLogo from '../assests/icons/brand_logo.svg';
-import searchIcon from '../assests/icons/search_icon.svg';
 import blackSearchIcon from '../assests/icons/black_search_icon.svg';
 import cartIcon from '../assests/icons/cart_icon.svg';
 import profileIcon from '../assests/icons/profile_icon.svg';
 import cancelIcon from '../assests/icons/cancel_icon.svg';
 import hamburgerIcon from '../assests/icons/hamburger_icon.svg';
 import chevronDownIcon from '../assests/icons/chevron_down_icon.svg';
+import NavbarSearch from './NavbarSearch';
 
 export const Navbar = () => {
     const { user } = useAuth();
     const { cartCount } = useCart();
     const [showOffer, setShowOffer] = useState(true);
+    const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
 
     return (
         <header className="navbar">
@@ -78,19 +79,17 @@ export const Navbar = () => {
                     )}
                 </ul>
 
-                <div className="navbar__search">
-                    <img src={searchIcon} alt="Search" className="navbar__search-icon" />
-                    <input
-                        type="text"
-                        placeholder="Search for products..."
-                        className="navbar__search-input"
-                    />
-                </div>
+                <NavbarSearch />
 
                 <div className="navbar__group">
-                    <a href="#search" className="navbar__cart-profile__search" aria-label="Search">
+                    <button
+                        type="button"
+                        className="navbar__cart-profile__search"
+                        aria-label="Search"
+                        onClick={() => setIsMobileSearchOpen((prev) => !prev)}
+                    >
                         <img src={blackSearchIcon} alt="Search" />
-                    </a>
+                    </button>
                     <Link to="/cart" aria-label="Cart" style={{ position: 'relative' }}>
                         <img src={cartIcon} alt="Cart" />
                         {cartCount > 0 && (
@@ -126,6 +125,12 @@ export const Navbar = () => {
                     </Link>
                 </div>
             </div>
+
+            {isMobileSearchOpen && (
+                <div className="navbar__mobile-search-bar">
+                    <NavbarSearch isMobile onCloseMobile={() => setIsMobileSearchOpen(false)} />
+                </div>
+            )}
         </header>
     );
 };
