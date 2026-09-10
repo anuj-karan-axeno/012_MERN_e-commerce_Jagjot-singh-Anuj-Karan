@@ -21,8 +21,8 @@ const AVAILABLE_SIZES = [
 const DRESS_STYLES = ['Casual', 'Formal', 'Party', 'Gym'];
 
 const MIN_LIMIT = 0;
-const MAX_LIMIT = 50000;
-const STEP = 500;
+const MAX_LIMIT = 500;
+const STEP = 50;
 
 export const ShopFilters = ({ onClose, isMobile = false }) => {
     const { filters, setFilter, applyFilters, resetFilters } = useProducts();
