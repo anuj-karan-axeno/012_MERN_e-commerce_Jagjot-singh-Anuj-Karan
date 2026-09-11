@@ -20,6 +20,12 @@
             font-size: 2em;
         }
     }
+
+    &__message {
+        text-align: center;
+        padding: 2em;
+        color: variables.$medium_grey_color;
+    }
 }
 
 .products-container {

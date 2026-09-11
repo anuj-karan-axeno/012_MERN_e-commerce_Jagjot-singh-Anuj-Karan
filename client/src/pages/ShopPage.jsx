@@ -76,7 +76,7 @@ export const ShopPage = () => {
                 <nav className="breadcrumb" aria-label="Breadcrumb">
                     <ul className="breadcrumb__list">
                         <li className="breadcrumb__item">
-                            <Link to="/" style={{ color: 'inherit', textDecoration: 'none' }}>
+                            <Link to="/" className="breadcrumb__link">
                                 Home
                             </Link>
                             <img src={chevronRightIcon} alt="" />

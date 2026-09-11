@@ -12,7 +12,7 @@ export const DressStyleSection = () => {
 
                 <ul className="dress-style__list">
                     <li className="dress-style__item dress-style__item--casual">
-                        <Link to="/shop?dressStyle=casual" style={{ textDecoration: 'none', color: 'inherit', display: 'block', width: '100%', height: '100%' }}>
+                        <Link to="/shop?dressStyle=casual" className="dress-style__link">
                             <span className="dress-style__label">Casual</span>
                             <img
                                 src={casualBanner}
@@ -23,7 +23,7 @@ export const DressStyleSection = () => {
                     </li>
 
                     <li className="dress-style__item dress-style__item--formal">
-                        <Link to="/shop?dressStyle=formal" style={{ textDecoration: 'none', color: 'inherit', display: 'block', width: '100%', height: '100%' }}>
+                        <Link to="/shop?dressStyle=formal" className="dress-style__link">
                             <span className="dress-style__label">Formal</span>
                             <img
                                 src={formalBanner}
@@ -34,7 +34,7 @@ export const DressStyleSection = () => {
                     </li>
 
                     <li className="dress-style__item dress-style__item--party">
-                        <Link to="/shop?dressStyle=party" style={{ textDecoration: 'none', color: 'inherit', display: 'block', width: '100%', height: '100%' }}>
+                        <Link to="/shop?dressStyle=party" className="dress-style__link">
                             <span className="dress-style__label">Party</span>
                             <img
                                 src={partyBanner}
@@ -45,7 +45,7 @@ export const DressStyleSection = () => {
                     </li>
 
                     <li className="dress-style__item dress-style__item--gym">
-                        <Link to="/shop?dressStyle=gym" style={{ textDecoration: 'none', color: 'inherit', display: 'block', width: '100%', height: '100%' }}>
+                        <Link to="/shop?dressStyle=gym" className="dress-style__link">
                             <span className="dress-style__label">Gym</span>
                             <img
                                 src={gymBanner}

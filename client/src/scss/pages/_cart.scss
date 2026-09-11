@@ -1,10 +1,17 @@
 @use '../components/navbar';
 @use '../components/breadcrumbs';
+@use '../abstracts/mixins' as mixins;
 @use '../abstracts/variables' as variables;
 @use '../components/quantity_selector';
 @use '../components/footer';
 @use '../components/button';
 
+.cart-loading-screen {
+    min-height: 60vh;
+    @include mixins.center;
+    font-size: 1em;
+    color: variables.$medium_grey_color;
+}
 
 .cart-page-container {
     padding: 0 variables.$container_padding_x_desktop 4em;
@@ -41,6 +48,29 @@
         @media (max-width:992px) {
             width: 100%;
         }
+    }
+}
+
+.cart-empty {
+    list-style: none;
+    text-align: center;
+    padding: 3.5rem 1rem;
+
+    &__title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        color: variables.$primary_color;
+    }
+
+    &__subtitle {
+        color: variables.$medium_grey_color;
+        margin-bottom: 1.5rem;
+    }
+
+    &__btn {
+        display: inline-block;
+        text-decoration: none;
     }
 }
 
@@ -356,6 +386,11 @@
         align-items: center;
         justify-content: center;
         gap: 0.5em;
+
+        &:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
     }
 }
 

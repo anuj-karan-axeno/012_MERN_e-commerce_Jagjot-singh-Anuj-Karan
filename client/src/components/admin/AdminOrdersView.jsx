@@ -97,7 +97,7 @@ export const AdminOrdersView = ({ orders, loading, onChangeStatus }) => {
                                 <th>Total</th>
                                 <th>Payment</th>
                                 <th>Order Status</th>
-                                <th style={{ textAlign: 'right' }}>Details</th>
+                                <th className="admin-table__th--right">Details</th>
                             </tr>
                         </thead>
                         <tbody>

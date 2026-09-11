@@ -89,7 +89,7 @@ export const AdminProductsView = ({
                                 <th>Price</th>
                                 <th>Sizes & Stock</th>
                                 <th>Status</th>
-                                <th style={{ textAlign: 'right' }}>Actions</th>
+                                <th className="admin-table__th--right">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -133,7 +133,7 @@ export const AdminProductsView = ({
                                                 ₹{(product.discountPrice && product.discountPrice > 0 && product.discountPrice < product.price ? product.discountPrice : product.price)?.toLocaleString('en-IN')}
                                             </span>
                                             {product.discountPrice && product.discountPrice > 0 && product.discountPrice < product.price && (
-                                                <div style={{ fontSize: '0.78em', color: '#999', textDecoration: 'line-through' }}>
+                                                <div className="admin-table__price-original">
                                                     ₹{product.price?.toLocaleString('en-IN')}
                                                     {product.discountPercentage ? ` (-${product.discountPercentage}%)` : ''}
                                                 </div>
@@ -165,7 +165,6 @@ export const AdminProductsView = ({
                                                 }`}
                                                 onClick={() => onToggleStatus && onToggleStatus(product._id, product.status || 'active')}
                                                 title={`Click to ${product.status === 'active' ? 'deactivate' : 'activate'} this product`}
-                                                style={{ cursor: 'pointer', border: 'none' }}
                                             >
                                                 {product.status || 'active'}
                                             </button>

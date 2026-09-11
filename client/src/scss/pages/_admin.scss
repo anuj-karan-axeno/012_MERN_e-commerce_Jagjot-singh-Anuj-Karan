@@ -459,9 +459,19 @@
         font-size: 0.95rem;
     }
 
+    &__price-original {
+        font-size: 0.78em;
+        color: variables.$medium_grey_color;
+        text-decoration: line-through;
+    }
+
     &__item-count {
         color: variables.$medium_grey_color;
         font-size: 0.82rem;
+    }
+
+    &__th--right {
+        text-align: right;
     }
 }
 
@@ -653,6 +663,7 @@
     font-size: 0.75rem;
     font-weight: 700;
     text-transform: capitalize;
+    border: none;
 
     &--placed {
         background-color: variables.$bg_info_subtle;
@@ -1191,4 +1202,8 @@
         justify-content: center;
         width: 100%;
     }
+}
+
+.admin-file-input-hidden {
+    display: none;
 }

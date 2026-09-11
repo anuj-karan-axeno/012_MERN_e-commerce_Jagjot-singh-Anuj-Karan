@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useProducts } from '../../hooks/ProductContext';
 import { useCategories } from '../../hooks/CategoryContext';
@@ -40,6 +40,15 @@ export const ShopFilters = ({ onClose, isMobile = false }) => {
 
     const minPercent = Math.min(100, Math.max(0, ((currentMin - MIN_LIMIT) / (MAX_LIMIT - MIN_LIMIT)) * 100));
     const maxPercent = Math.min(100, Math.max(0, ((currentMax - MIN_LIMIT) / (MAX_LIMIT - MIN_LIMIT)) * 100));
+
+    const progressRef = useRef(null);
+
+    useEffect(() => {
+        if (progressRef.current) {
+            progressRef.current.style.left = `${minPercent}%`;
+            progressRef.current.style.right = `${100 - maxPercent}%`;
+        }
+    }, [minPercent, maxPercent, isPriceOpen]);
 
     const handleMinSliderChange = (e) => {
         const val = Math.min(Number(e.target.value), currentMax - STEP);
@@ -186,11 +195,8 @@ export const ShopFilters = ({ onClose, isMobile = false }) => {
                         <div className="shop-filters__price-slider">
                             <div className="shop-filters__slider-track" />
                             <div
+                                ref={progressRef}
                                 className="shop-filters__slider-progress"
-                                style={{
-                                    left: `${minPercent}%`,
-                                    right: `${100 - maxPercent}%`,
-                                }}
                             />
                             <input
                                 type="range"

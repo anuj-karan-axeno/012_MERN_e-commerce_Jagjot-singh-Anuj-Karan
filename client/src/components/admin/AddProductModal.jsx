@@ -477,7 +477,7 @@ export const AddProductModal = ({ isOpen, onClose, onAddProduct, categories }) =
                                                 type="file"
                                                 accept=".jpg,.jpeg,.png,.webp,.webpg,.heic,.heif,image/jpeg,image/png,image/webp,image/heic,image/heif"
                                                 onChange={handleThumbnailChange}
-                                                style={{ display: 'none' }}
+                                                className="admin-file-input-hidden"
                                             />
                                         </label>
                                     </div>
@@ -490,7 +490,7 @@ export const AddProductModal = ({ isOpen, onClose, onAddProduct, categories }) =
                                             type="file"
                                             accept=".jpg,.jpeg,.png,.webp,.webpg,.heic,.heif,image/jpeg,image/png,image/webp,image/heic,image/heif"
                                             onChange={handleThumbnailChange}
-                                            style={{ display: 'none' }}
+                                            className="admin-file-input-hidden"
                                         />
                                     </label>
                                 )}
@@ -518,7 +518,7 @@ export const AddProductModal = ({ isOpen, onClose, onAddProduct, categories }) =
                                                 accept=".jpg,.jpeg,.png,.webp,.webpg,.heic,.heif,image/jpeg,image/png,image/webp,image/heic,image/heif"
                                                 multiple
                                                 onChange={handleGalleryChange}
-                                                style={{ display: 'none' }}
+                                                className="admin-file-input-hidden"
                                             />
                                         </label>
                                     </div>
@@ -532,7 +532,7 @@ export const AddProductModal = ({ isOpen, onClose, onAddProduct, categories }) =
                                             accept=".jpg,.jpeg,.png,.webp,.webpg,.heic,.heif,image/jpeg,image/png,image/webp,image/heic,image/heif"
                                             multiple
                                             onChange={handleGalleryChange}
-                                            style={{ display: 'none' }}
+                                            className="admin-file-input-hidden"
                                         />
                                     </label>
                                 )}

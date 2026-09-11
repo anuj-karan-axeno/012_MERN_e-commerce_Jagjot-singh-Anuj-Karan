@@ -272,6 +272,18 @@
             outline-offset: 3px;
         }
 
+        &--olive {
+            background-color: variables.$swatch_olive;
+        }
+
+        &--forest {
+            background-color: variables.$swatch_forest;
+        }
+
+        &--navy {
+            background-color: variables.$swatch_navy;
+        }
+
         &__check {
             color: variables.$secondary_color;
             font-size: 0.85rem;
@@ -337,6 +349,7 @@
             border-bottom: 1px solid variables.$light_grey_color;
             flex: 1;
             text-align: center;
+            cursor: pointer;
 
             @media (max-width:768px) {
                 padding: 1em 1.25em;
@@ -497,5 +510,49 @@
         &__button {
             margin-top: 2rem;
         }
+    }
+}
+
+.product-page-loading {
+    padding: 6rem 1rem;
+    text-align: center;
+    color: variables.$medium_grey_color;
+
+    &__text {
+        font-size: 1.2rem;
+        font-weight: 500;
+    }
+}
+
+.product-tab-content {
+    padding: 2rem 1rem;
+    line-height: 1.8;
+    color: variables.$medium_grey_color;
+
+    &__title {
+        margin-bottom: 1rem;
+        color: variables.$primary_color;
+    }
+
+    &__desc {
+        margin-bottom: 1rem;
+    }
+
+    &__list {
+        list-style: disc;
+        padding-left: 1.5rem;
+    }
+
+    &__faq-item {
+        margin-bottom: 1.5rem;
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+
+    &__faq-question {
+        color: variables.$primary_color;
+        font-weight: 600;
     }
 }

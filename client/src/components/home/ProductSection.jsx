@@ -14,11 +14,11 @@ export const ProductSection = ({
             <h2 className="product-section__heading">{title}</h2>
 
             {loading ? (
-                <div style={{ textAlign: 'center', padding: '2em', color: '#999' }}>
+                <div className="product-section__message">
                     Loading products...
                 </div>
             ) : activeProducts.length === 0 ? (
-                <div style={{ textAlign: 'center', padding: '2em', color: '#999' }}>
+                <div className="product-section__message">
                     No products currently available in this section.
                 </div>
             ) : (

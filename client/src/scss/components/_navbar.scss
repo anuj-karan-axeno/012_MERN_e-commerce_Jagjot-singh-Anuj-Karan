@@ -86,6 +86,10 @@
             color: variables.$primary_color;
             @include mixins.center;
             gap: .2em;
+
+            &--admin {
+                font-weight: 700;
+            }
         }
 
         &-icon {
@@ -308,6 +312,31 @@
         @include mixins.center($justifyContent: start);
         gap: 1rem;
         flex-shrink: 0;
+    }
+
+    &__cart-link {
+        position: relative;
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+        color: inherit;
+    }
+
+    &__cart-badge {
+        position: absolute;
+        top: -6px;
+        right: -8px;
+        background-color: variables.$primary_color;
+        color: variables.$secondary_color;
+        font-size: 0.65rem;
+        font-weight: 700;
+        border-radius: 50%;
+        min-width: 16px;
+        height: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 3px;
     }
 
     &__profile-link {

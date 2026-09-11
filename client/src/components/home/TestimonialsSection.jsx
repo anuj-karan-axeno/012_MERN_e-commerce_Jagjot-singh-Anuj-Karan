@@ -38,7 +38,7 @@ export const TestimonialsSection = () => {
             <ul className="testimonials__list">
                 {TESTIMONIALS_DATA.map((item, index) => (
                     <li key={index} className="testimonials-card">
-                        <div className="testimonials-card__stars" style={{ color: '#f4c542', marginBottom: '0.5em' }}>
+                        <div className="testimonials-card__stars">
                             ★★★★★
                         </div>
                         <p className="testimonials-card__author">{item.name}</p>

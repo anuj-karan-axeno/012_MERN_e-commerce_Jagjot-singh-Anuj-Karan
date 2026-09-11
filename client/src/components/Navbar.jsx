@@ -72,7 +72,7 @@ export const Navbar = () => {
 
                     {user?.role === 'admin' && (
                         <li className="navbar__links-item">
-                            <Link to="/admin" className="navbar__links-link" style={{ fontWeight: 700 }}>
+                            <Link to="/admin" className="navbar__links-link navbar__links-link--admin">
                                 Admin Portal
                             </Link>
                         </li>
@@ -90,27 +90,10 @@ export const Navbar = () => {
                     >
                         <img src={blackSearchIcon} alt="Search" />
                     </button>
-                    <Link to="/cart" aria-label="Cart" style={{ position: 'relative' }}>
+                    <Link to="/cart" aria-label="Cart" className="navbar__cart-link">
                         <img src={cartIcon} alt="Cart" />
                         {cartCount > 0 && (
-                            <span
-                                style={{
-                                    position: 'absolute',
-                                    top: '-6px',
-                                    right: '-8px',
-                                    backgroundColor: '#000',
-                                    color: '#fff',
-                                    fontSize: '0.65rem',
-                                    fontWeight: 700,
-                                    borderRadius: '50%',
-                                    minWidth: '16px',
-                                    height: '16px',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    padding: '0 3px',
-                                }}
-                            >
+                            <span className="navbar__cart-badge">
                                 {cartCount}
                             </span>
                         )}

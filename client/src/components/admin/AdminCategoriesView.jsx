@@ -92,7 +92,7 @@ export const AdminCategoriesView = ({
                                 <th>Category Name</th>
                                 <th>Description</th>
                                 <th>Assigned Products</th>
-                                <th style={{ textAlign: 'right' }}>Actions</th>
+                                <th className="admin-table__th--right">Actions</th>
                             </tr>
                         </thead>
                         <tbody>

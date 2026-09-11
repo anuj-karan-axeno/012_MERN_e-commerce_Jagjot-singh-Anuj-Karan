@@ -70,8 +70,8 @@ export const ProductDescription = () => {
 
             <div className="product-page-container">
                 {loading && !product ? (
-                    <div style={{ padding: '6rem 1rem', textAlign: 'center', color: '#777' }}>
-                        <p style={{ fontSize: '1.2rem', fontWeight: 500 }}>Loading product details...</p>
+                    <div className="product-page-loading">
+                        <p className="product-page-loading__text">Loading product details...</p>
                     </div>
                 ) : error && !product ? (
                     <ProductNotFound message={error} />
@@ -89,12 +89,12 @@ export const ProductDescription = () => {
                         {activeTab === 'reviews' && <ProductReviews />}
 
                         {activeTab === 'details' && (
-                            <div style={{ padding: '2rem 1rem', lineHeight: '1.8', color: '#555' }}>
-                                <h3 style={{ marginBottom: '1rem', color: '#000' }}>Product Specifications</h3>
-                                <p style={{ marginBottom: '1rem' }}>
+                            <div className="product-tab-content">
+                                <h3 className="product-tab-content__title">Product Specifications</h3>
+                                <p className="product-tab-content__desc">
                                     {product?.description || 'Crafted with premium materials designed for long-lasting wear and comfort.'}
                                 </p>
-                                <ul style={{ listStyle: 'disc', paddingLeft: '1.5rem' }}>
+                                <ul className="product-tab-content__list">
                                     <li>Material: 100% Breathable Combed Cotton</li>
                                     <li>Fit: Regular casual relaxed fit</li>
                                     <li>Care Instructions: Machine wash cold with like colors, tumble dry low</li>
@@ -104,18 +104,18 @@ export const ProductDescription = () => {
                         )}
 
                         {activeTab === 'faqs' && (
-                            <div style={{ padding: '2rem 1rem', lineHeight: '1.8', color: '#555' }}>
-                                <h3 style={{ marginBottom: '1rem', color: '#000' }}>Frequently Asked Questions</h3>
-                                <div style={{ marginBottom: '1.5rem' }}>
-                                    <h4 style={{ color: '#000', fontWeight: 600 }}>What is the delivery timeline?</h4>
+                            <div className="product-tab-content">
+                                <h3 className="product-tab-content__title">Frequently Asked Questions</h3>
+                                <div className="product-tab-content__faq-item">
+                                    <h4 className="product-tab-content__faq-question">What is the delivery timeline?</h4>
                                     <p>Standard delivery takes 3-5 business days. Express delivery is available at checkout.</p>
                                 </div>
-                                <div style={{ marginBottom: '1.5rem' }}>
-                                    <h4 style={{ color: '#000', fontWeight: 600 }}>What is your return policy?</h4>
+                                <div className="product-tab-content__faq-item">
+                                    <h4 className="product-tab-content__faq-question">What is your return policy?</h4>
                                     <p>We offer hassle-free returns within 30 days of receiving your order.</p>
                                 </div>
-                                <div>
-                                    <h4 style={{ color: '#000', fontWeight: 600 }}>How do I choose my size?</h4>
+                                <div className="product-tab-content__faq-item">
+                                    <h4 className="product-tab-content__faq-question">How do I choose my size?</h4>
                                     <p>Please refer to our standard size guide. If between sizes, we recommend sizing up for a relaxed fit.</p>
                                 </div>
                             </div>

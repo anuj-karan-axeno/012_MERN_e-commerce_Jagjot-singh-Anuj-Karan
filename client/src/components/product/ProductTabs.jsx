@@ -13,7 +13,6 @@ export const ProductTabs = ({ activeTab, setActiveTab }) => {
                         key={tab.id}
                         className={`tabs__tab ${activeTab === tab.id ? 'tabs__tab--active' : ''}`}
                         onClick={() => setActiveTab(tab.id)}
-                        style={{ cursor: 'pointer' }}
                     >
                         {tab.label}
                     </li>

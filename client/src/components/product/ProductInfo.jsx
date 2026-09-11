@@ -5,9 +5,9 @@ import { useCart } from '../../hooks/CartContext';
 import { useAuth } from '../../hooks/AuthContext';
 
 const COLORS = [
-    { name: 'Olive Green', code: '#4F4631' },
-    { name: 'Deep Teal', code: '#314F4A' },
-    { name: 'Navy Blue', code: '#31344F' },
+    { name: 'Olive Green', code: '#4F4631', className: 'color-swatch--olive' },
+    { name: 'Deep Teal', code: '#314F4A', className: 'color-swatch--forest' },
+    { name: 'Navy Blue', code: '#31344F', className: 'color-swatch--navy' },
 ];
 
 export const ProductInfo = ({ product, onAddToCart }) => {
@@ -174,8 +174,7 @@ export const ProductInfo = ({ product, onAddToCart }) => {
                             <button
                                 key={color.code}
                                 type="button"
-                                className={`color-swatch ${isSelected ? 'color-swatch--active' : ''}`}
-                                style={{ backgroundColor: color.code }}
+                                className={`color-swatch ${color.className} ${isSelected ? 'color-swatch--active' : ''}`}
                                 onClick={() => setSelectedColor(color.code)}
                                 aria-label={`Select color ${color.name}`}
                             >

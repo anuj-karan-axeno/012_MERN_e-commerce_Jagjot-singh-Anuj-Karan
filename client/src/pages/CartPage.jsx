@@ -32,7 +32,7 @@ const CartPage = () => {
 
     if (initialLoading) {
         return (
-            <div className="cart-loading-screen" style={{ minHeight: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <div className="cart-loading-screen">
                 <p>Loading cart...</p>
             </div>
         );
@@ -105,7 +105,7 @@ const CartPage = () => {
                 <nav className="breadcrumb" aria-label="Breadcrumb">
                     <ul className="breadcrumb__list">
                         <li className="breadcrumb__item">
-                            <Link to="/" style={{ color: 'inherit', textDecoration: 'none' }}>
+                            <Link to="/" className="breadcrumb__link">
                                 Home
                             </Link>
                             <img src={chevronRightIcon} alt="chevron_right" />
@@ -122,17 +122,16 @@ const CartPage = () => {
                     <div className="cart__layout">
                         <ul className="cart__items">
                             {cartItems.length === 0 ? (
-                                <li style={{ textAlign: 'center', padding: '3.5rem 1rem' }}>
-                                    <p style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '0.5rem', color: '#000' }}>
+                                <li className="cart-empty">
+                                    <p className="cart-empty__title">
                                         Your cart is empty
                                     </p>
-                                    <p style={{ color: '#777', marginBottom: '1.5rem' }}>
+                                    <p className="cart-empty__subtitle">
                                         Add some items to your cart to see them here.
                                     </p>
                                     <Link
                                         to="/"
-                                        className="button button--primary"
-                                        style={{ display: 'inline-block', textDecoration: 'none' }}
+                                        className="button button--primary cart-empty__btn"
                                     >
                                         Explore Products
                                     </Link>
@@ -167,14 +166,12 @@ const CartPage = () => {
                                                     type="button"
                                                     className="cart-item__remove"
                                                     aria-label={`Remove ${item.name} from cart`}
-                                                    style={{ cursor: 'pointer' }}
                                                     onClick={() => removeFromCart(item.productId, item.size, item.color)}
                                                 >
                                                     <img
                                                         src={trashIcon}
                                                         alt="Remove"
                                                         className="cart-item__remove-icon"
-                                                        style={{ cursor: 'pointer' }}
                                                     />
                                                 </button>
                                             </div>
@@ -310,7 +307,6 @@ const CartPage = () => {
                                 type="button"
                                 className="order-summary__checkout"
                                 disabled={cartItems.length === 0}
-                                style={cartItems.length === 0 ? { opacity: 0.6, cursor: 'not-allowed' } : {}}
                                 onClick={handleCheckout}
                             >
                                 Go to Checkout
